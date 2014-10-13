@@ -1,0 +1,82 @@
+<!doctype HTML>
+<html>
+     <?php// include('header.php'); ?>
+    <head><meta charset="utf-8"></head>
+    <body>
+        <fieldset><legend><font color='black'  size="4"><b style="font-family:  'Hoefler Text', Georgia, 'Times New Roman', serif;">RECORDINGS </b></font> </legend>
+
+            
+<?php
+//$conn=mysqli_connect('localhost','root',"mummy","uploadvideo");  //db
+
+require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
+
+            if(isset($_POST['delete']))  {   
+                if(isset($_POST['name'])){ 
+                     $names=$_POST['name'];
+                     
+                        foreach($names as $value){
+                                      echo "<div  style='float:right;'><font color='#A80707'><b>".$value." , </font></b></div>";
+                               
+                           if(!file_exists('uploads/'.$value)){
+                                echo "Sorry Video had been currupted and did not stored on server<br /><br/>";
+                                 mysqli_query($conn,"DELETE FROM videos WHERE name='$value' ");   //db
+                           }
+                           
+                            else{
+                                 unlink('uploads/'.$value);
+                                 
+                                 mysqli_query($conn,"DELETE FROM videos WHERE name='$value' ");  //db
+                             }
+                                 
+                         }
+                         
+                      echo "<div><font color='#A80707'> Successfully Deleted </font></div>";   
+                }
+           }
+   
+?>
+    <form action='' method=post>
+       <?php
+       
+      // $DB->get_record_sql('SELECT * FROM {videos} WHERE firstname = ? AND lastname = ?', array('Martin', 'Dougiamas'));
+  $record= $DB->get_record_sql('SELECT * FROM {videos}');
+       
+
+
+        if($DB->count_records("videos")== 0){
+                echo "<a href='index.php'><input type=button value='Back to Video Capture' name='home' /></a>";
+                echo "<div  style='float:right;'><font color='#A80707'><b>No Video File Exist</font></b></div>";
+          }
+            
+        else{  
+            
+            echo "<div align=center><a href='index.php'><input type=button value='Back to Video Capture' name='home' style='height: 40px; width: 180px;' /></a> | ";
+            echo '<td colspan=3><input type="submit" value="Delete Videos" name="delete" title="Delete" style="height: 40px; width: 180px;" /></td></div><br/><br/>';
+            
+            echo "<div style='overflow: scroll; width: 500px; height: 600px;margin-left:40%;'><table cellpadding=36 cellspacing=2 bordercolor=green border=1>";
+            echo "<tr><th>Id</th><th>Name</th><th>Delete</th></tr>";
+            
+            
+            foreach($record as $value){
+               print_r($value);
+            
+            }
+            
+           /*while($row=$DB->get_record($query)){   //db
+
+                $id=$row['id'];
+               $name=$row['name'];
+                $urll=$row['url'];
+
+                echo "<tr><td>$id</td><td><a href='watch.php?id=$id'>$name</a><br /></td><td><input type=checkbox name=name[] value='$name' /></td></tr>";
+            }*/
+            
+            echo "</table></div>";
+        }
+      ?>
+       </form>
+      </fieldset>
+    </body>
+    <?php// include('footer.html')?> 
+</html>
