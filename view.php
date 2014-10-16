@@ -65,7 +65,8 @@ $PAGE->set_context($context);
 //$PAGE->set_cacheable(false);
 //$PAGE->set_focuscontrol('some-html-id');
 //$PAGE->add_body_class('newmodule-'.$somevar);
-
+$completion = new completion_info($course);
+$completion->set_module_viewed($cm);
 // Output starts here                         
 echo $OUTPUT->header();
 
