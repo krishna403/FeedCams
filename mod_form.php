@@ -76,4 +76,114 @@ class mod_newmodule_mod_form extends moodleform_mod {
         // add standard buttons, common to all modules
         $this->add_action_buttons();
     }
+
+/*
+function add_completion_rules() {
+ 
+    $mform =& $this->_form;
+
+    $group=array();
+    $group[] =& $mform->createElement('checkbox', 'completionrecordenabled', ' ', get_string('completionrecord','newmodule'));
+  //  $group[] =& $mform->createElement('text', 'completionrecord', ' ', array('size'=>3));
+    $mform->setType('completionrecord',PARAM_INT);
+    $mform->addGroup($group, 'completionrecordgroup', get_string('completionrecordgroup','newmodule'), array(' '), false);
+   // $mform->setHelpButton('completionrecordgroup', array('completion', get_string('completionrecordhelp', 'newmodule'), 'newmodule'));
+    $mform->disabledIf('completionrecord','completionrecordenabled','notchecked');
+
+    
+     $group=array();
+    $group[] =& $mform->createElement('checkbox', 'completionwatchenabled', ' ', get_string('completionwatch','newmodule'));
+  
+    $mform->setType('completionwatch',PARAM_INT);
+    $mform->addGroup($group, 'completionwatchgroup', get_string('completionwatchgroup','newmodule'), array(' '), false);
+   // $mform->setHelpButton('completionwatchgroup', array('completion', get_string('completionwatchhelp', 'newmodule'), 'newmodule'));
+    $mform->disabledIf('completionwatch','completionwatchenabled','notchecked');
+    
+    
+    return array('completionrecordgroup','completionwatchgroup');
+}
+
+ function completion_rule_enabled($data) {
+        return (!empty($data['completionrecordenabled']) && $data['completionrecord']!=0) ||
+            (!empty($data['completionwatchenabled']) && $data['completionwatch']!=0);
+    }
+    
+    
+    function get_data() {
+        $data = parent::get_data();
+        if (!$data) {
+            return false;
+        }
+        // Turn off completion settings if the checkboxes aren't ticked
+        if (!empty($data->completionunlocked)) {
+            $autocompletion = !empty($data->completion) && $data->completion==COMPLETION_TRACKING_AUTOMATIC;
+            if (empty($data->completionrecordenabled) || !$autocompletion) {
+                $data->completionrecord = 0;
+            }
+            if (empty($data->completionwatchenabled) || !$autocompletion) {
+                $data->completionwatch = 0;
+            }
+        }
+        return $data;
+    }
+    */
+    
+    
+    
+    function get_data() {
+        $data = parent::get_data();
+        if (!$data) {
+            return false;
+        }
+        // Set up completion section even if checkbox is not ticked
+        if (!empty($data->completionunlocked)) {
+            if (empty($data->completionrecord)) {
+                $data->completionrecord = 0;
+            }
+            
+             if (empty($data->completionwatch)) {
+                $data->completionwatch = 0;
+            }
+        }
+      //  print_r($data);
+      //  exit();
+        return $data;
+        
+    }
+
+    function add_completion_rules() {
+        $mform =& $this->_form;
+
+        $mform->addElement('checkbox', 'completionrecord', '', get_string('completionrecord', 'newmodule'));
+        $mform->addElement('checkbox', 'completionwatch', '', get_string('completionwatch', 'newmodule'));
+        return array('completionrecord','completionwatch');
+    }
+
+    function completion_rule_enabled($data) {
+        return (!empty($data['completionrecord']) || !empty($data['completionwatch']));
+    }
+    
+    
+   /* function data_preprocessing(&$default_values) {
+        
+        parent::data_preprocessing($default_values);
+
+        // Set up the completion checkboxes which aren't part of standard data.
+        // We also make the default value (if you turn on the checkbox) for those
+        // numbers to be 1, this will not apply unless checkbox is ticked.
+        $default_values['completionrecord']=
+            !empty($default_values['completionrecord']) ? 1 : 0;
+        if (empty($default_values['completionrecord'])) {
+            $default_values['completionrecord']=1;
+        }
+        $default_values['completionwatch']=
+            !empty($default_values['completionwatch']) ? 1 : 0;
+        if (empty($default_values['completionwatch'])) {
+            $default_values['completionwatch']=1;
+        }
+       
+    }*/
+    
+    
+    
 }

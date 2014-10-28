@@ -19,6 +19,9 @@ global $DB;
 $id = optional_param('id', 0, PARAM_INT); // course_module ID, or
 $n  = optional_param('n', 0, PARAM_INT);  // newmodule instance ID - it should be named as the first character of the module
 
+echo $id;
+exit();
+/*
 if ($id) {
     $cm         = get_coursemodule_from_id('newmodule', $id, 0, false, MUST_EXIST);
     $course     = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
@@ -36,7 +39,7 @@ $context = context_module::instance($cm->id);
    
 echo $context;
 echo $context->id;
-
+exit();
 */
 foreach(array('video', 'audio') as $type) {
     if (isset($_FILES["${type}-blob"])) {

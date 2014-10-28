@@ -45,5 +45,9 @@ $string['newmodule:record'] = 'record';
 $string['newmodule:godatabase'] = 'godatabase';
 $string['newmodule:deleterecent'] = 'deleterecent';
 $string['newmodule:deletemultiple'] = 'deletemultiple';
+$string['completionrecord'] = 'Student must record the video lacture:';
+//$string['completionrecordhelp'] = 'requiring recordings and feedbacks to complete';
+$string['completionwatch'] = 'Student must watch the video lactures:';
+//$string['completionwatchhelp'] = 'requiring recordings and feedbacks to complete';
 
 

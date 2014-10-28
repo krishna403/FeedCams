@@ -37,8 +37,8 @@ $logs = array(
     array('module'=>'newmodule', 'action'=>'update', 'mtable'=>'newmodule', 'field'=>'name'),
     array('module'=>'newmodule', 'action'=>'view', 'mtable'=>'newmodule', 'field'=>'name'),
     array('module'=>'newmodule', 'action'=>'view all', 'mtable'=>'newmodule', 'field'=>'name'),
-    array('module'=>'newmodule', 'action'=>'add', 'mtable'=>'videos', 'field'=>'id'),
-    array('module'=>'newmodule', 'action'=>'update', 'mtable'=>'videos', 'field'=>'id'),
-    array('module'=>'newmodule', 'action'=>'view', 'mtable'=>'videos', 'field'=>'id'),
-    array('module'=>'newmodule', 'action'=>'view all', 'mtable'=>'videos', 'field'=>'id')
+    array('module'=>'newmodule', 'action'=>'add', 'mtable'=>'videos', 'field'=>'name'),
+    array('module'=>'newmodule', 'action'=>'update', 'mtable'=>'videos', 'field'=>'name'),
+    array('module'=>'newmodule', 'action'=>'view', 'mtable'=>'videos', 'field'=>'name'),
+    array('module'=>'newmodule', 'action'=>'view all', 'mtable'=>'videos', 'field'=>'name')
 );

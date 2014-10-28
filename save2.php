@@ -1,4 +1,4 @@
-<?php/*
+<?php
 echo "abcd";
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 global $DB;

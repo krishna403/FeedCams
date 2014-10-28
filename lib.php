@@ -47,18 +47,41 @@ defined('MOODLE_INTERNAL') || die();
  * @return mixed true if the feature is supported, null if unknown
  */
 function newmodule_supports($feature) {
+    
     switch($feature) {
-        case FEATURE_MOD_INTRO:         return true;
+        case FEATURE_GROUPS:                  return false;
+        case FEATURE_GROUPINGS:               return false;
+        case FEATURE_GROUPMEMBERSONLY:        return false;
+        case FEATURE_MOD_INTRO:               return true;
         case FEATURE_COMPLETION_TRACKS_VIEWS: return true;
         case FEATURE_COMPLETION_HAS_RULES:    return true;
-        case FEATURE_GRADE_HAS_GRADE:         return true;
-        case FEATURE_GRADE_OUTCOMES:          return true;
-        case FEATURE_RATE:                    return true;
-        case FEATURE_BACKUP_MOODLE2:          return true;
-        default:                        return null;
+        case FEATURE_GRADE_HAS_GRADE:         return false;
+        case FEATURE_GRADE_OUTCOMES:          return false;
+        case FEATURE_BACKUP_MOODLE2:          return false;
+        case FEATURE_SHOW_DESCRIPTION:        return false;
+      //  case FEATURE_COMPLETION_HAS_RULES: return true;
+        default: return null;
     }
 }
 
+
+
+function newmodule_get_completion_state($course, $cm, $userid, $type) {
+    global $CFG,$DB;
+
+    // Get choice details
+    $videos = $DB->get_record('newmodule', array('id'=>$cm->instance), '*',
+            MUST_EXIST);
+
+    // If completion option is enabled, evaluate it and return true/false
+    if($videos->completionrecord) {
+        return $DB->record_exists('choice_answers', array(
+                'choiceid'=>$choice->id, 'userid'=>$userid));
+    } else {
+        // Completion option is not enabled so just return $type
+        return $type;
+    }
+}
 /**
  * Saves a new instance of the newmodule into the database
  *
@@ -99,7 +122,6 @@ function newmodule_update_instance(stdClass $newmodule, mod_newmodule_mod_form $
     $newmodule->id = $newmodule->instance;
 
     # You may have to add extra stuff in here #
-
     return $DB->update_record('newmodule', $newmodule);
 }
 
