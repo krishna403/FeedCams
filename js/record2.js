@@ -3,11 +3,14 @@
             document.createElement('footer');
                 // PostBlob method uses XHR2 and FormData to submit 
                 // recorded blob to the PHP server
-                function PostBlob(blob, fileType, fileName) {
+                
+              //  print('<?php echo $id; ?>');
+                function PostBlob(blob, fileType, fileName){
                     // FormData
                     var formData = new FormData();
                     formData.append(fileType + '-filename', fileName);
                     formData.append(fileType + '-blob', blob);
+                 //   formData.append(fileType + '<?php echo $id; ?>', cmid);
 
                     // progress-bar
                     var hr = document.createElement('hr');
@@ -19,11 +22,12 @@
                     var progress = document.createElement('progress');
                     container.appendChild(progress);
 
-
+                      //alert(window.uniqueId);
                     // POST the Blob using XHR2
-                xhr('save.php', formData, progress, percentage, function(fileURL) {
+                xhr('save.php?cmid='+window.uniqueId, formData, progress, percentage, function(fileURL) {
                         
-                       // alert(fileURL);
+                        alert(fileURL);
+                        
                         container.appendChild(document.createElement('hr'));
                         var mediaElement = document.createElement(fileType);
                         
@@ -142,7 +146,8 @@
                     if (!fileName) return;
                     var formData = new FormData();
                     formData.append('delete-file', fileName);
-                    xhr('http://localhost/moodle27d/mod/newmodule/delete.php', formData, null, null, function(response) {
+                  
+                    xhr('delete.php?cmid='+window.uniqueId, formData, null, null, function(response) {
                         
                         alert(response);
                        console.log(response);

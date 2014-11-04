@@ -16,16 +16,16 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Library of interface functions and constants for module newmodule
+ * Library of interface functions and constants for module feedcam
  *
  * All the core Moodle functions, neeeded to allow the module to work
  * integrated in Moodle should be placed here.
- * All the newmodule specific functions, needed to implement all the module
+ * All the feedcam specific functions, needed to implement all the module
  * logic, should go to locallib.php. This will help to save some memory when
  * Moodle is performing actions across all modules.
  *
  * @package    mod
- * @subpackage newmodule
+ * @subpackage feedcam
  * @copyright  2011 Your Name
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -33,7 +33,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** example constant */
-//define('NEWMODULE_ULTIMATE_ANSWER', 42);
+//define('FEEDCAM_ULTIMATE_ANSWER', 42);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Moodle core API                                                            //
@@ -46,7 +46,7 @@ defined('MOODLE_INTERNAL') || die();
  * @param string $feature FEATURE_xx constant for requested feature
  * @return mixed true if the feature is supported, null if unknown
  */
-function newmodule_supports($feature) {
+function feedcam_supports($feature) {
     
     switch($feature) {
         case FEATURE_GROUPS:                  return false;
@@ -66,67 +66,89 @@ function newmodule_supports($feature) {
 
 
 
-function newmodule_get_completion_state($course, $cm, $userid, $type) {
+function feedcam_get_completion_state($course, $cm, $userid, $type) {
     global $CFG,$DB;
 
-    // Get choice details
-    $videos = $DB->get_record('newmodule', array('id'=>$cm->instance), '*',
-            MUST_EXIST);
+     $feedcam = $DB->get_record('feedcam', array('id'=>$cm->instance), '*', MUST_EXIST);
 
     // If completion option is enabled, evaluate it and return true/false
-    if($videos->completionrecord) {
-        return $DB->record_exists('choice_answers', array(
-                'choiceid'=>$choice->id, 'userid'=>$userid));
-    } else {
+    if($feedcam->completionrecord && (!($feedcam->completionrecord && $feedcam->completionwatch))) {
+        
+       // print_r('rec');
+      // print_r($cm->instance);
+      // echo '______________';
+     //  print_r($feedcam->id);
+      //  $countvid= $DB->count_records('videos', array('feedcam_id' => $feedcam->id, 'user_id' => $userid));
+        return $DB->record_exists('videos', array('feedcam_id'=>$cm->instance, 'user_id'=>$userid));
+    } 
+    
+   else if($feedcam->completionwatch && (!($feedcam->completionrecord && $feedcam->completionwatch))) {
+        
+      //  print_r('wat');
+        return $DB->record_exists('feedcam_watching', array('user_id'=>$userid, 'feedcam_id'=>$cm->instance));
+    } 
+    
+    else if(($feedcam->completionrecord && $feedcam->completionwatch)) {
+        
+    //    print_r('both');
+        $rec=$DB->record_exists('videos', array('feedcam_id'=>$cm->instance, 'user_id'=>$userid));
+        $wat=$DB->record_exists('feedcam_watching', array('user_id'=>$userid, 'feedcam_id'=>$cm->instance));
+        
+        return ($rec && $wat);
+    }
+    
+    else {
+    //    print_r('nothing');
         // Completion option is not enabled so just return $type
         return $type;
     }
+   
 }
 /**
- * Saves a new instance of the newmodule into the database
+ * Saves a new instance of the feedcam into the database
  *
  * Given an object containing all the necessary data,
  * (defined by the form in mod_form.php) this function
  * will create a new instance and return the id number
  * of the new instance.
  *
- * @param object $newmodule An object from the form in mod_form.php
- * @param mod_newmodule_mod_form $mform
- * @return int The id of the newly inserted newmodule record
+ * @param object $feedcam An object from the form in mod_form.php
+ * @param mod_feedcam_mod_form $mform
+ * @return int The id of the newly inserted feedcam record
  */
-function newmodule_add_instance(stdClass $newmodule, mod_newmodule_mod_form $mform = null) {
+function feedcam_add_instance(stdClass $feedcam, mod_feedcam_mod_form $mform = null) {
     global $DB;
 
-    $newmodule->timecreated = time();
+    $feedcam->timecreated = time();
 
     # You may have to add extra stuff in here #
 
-    return $DB->insert_record('newmodule', $newmodule);
+    return $DB->insert_record('feedcam', $feedcam);
 }
 
 /**
- * Updates an instance of the newmodule in the database
+ * Updates an instance of the feedcam in the database
  *
  * Given an object containing all the necessary data,
  * (defined by the form in mod_form.php) this function
  * will update an existing instance with new data.
  *
- * @param object $newmodule An object from the form in mod_form.php
- * @param mod_newmodule_mod_form $mform
+ * @param object $feedcam An object from the form in mod_form.php
+ * @param mod_feedcam_mod_form $mform
  * @return boolean Success/Fail
  */
-function newmodule_update_instance(stdClass $newmodule, mod_newmodule_mod_form $mform = null) {
+function feedcam_update_instance(stdClass $feedcam, mod_feedcam_mod_form $mform = null) {
     global $DB;
 
-    $newmodule->timemodified = time();
-    $newmodule->id = $newmodule->instance;
+    $feedcam->timemodified = time();
+    $feedcam->id = $feedcam->instance;
 
     # You may have to add extra stuff in here #
-    return $DB->update_record('newmodule', $newmodule);
+    return $DB->update_record('feedcam', $feedcam);
 }
 
 /**
- * Removes an instance of the newmodule from the database
+ * Removes an instance of the feedcam from the database
  *
  * Given an ID of an instance of this module,
  * this function will permanently delete the instance
@@ -135,16 +157,16 @@ function newmodule_update_instance(stdClass $newmodule, mod_newmodule_mod_form $
  * @param int $id Id of the module instance
  * @return boolean Success/Failure
  */
-function newmodule_delete_instance($id) {
+function feedcam_delete_instance($id) {
     global $DB;
 
-    if (! $newmodule = $DB->get_record('newmodule', array('id' => $id))) {
+    if (! $feedcam = $DB->get_record('feedcam', array('id' => $id))) {
         return false;
     }
 
     # Delete any dependent records here #
 
-    $DB->delete_records('newmodule', array('id' => $newmodule->id));
+    $DB->delete_records('feedcam', array('id' => $feedcam->id));
 
     return true;
 }
@@ -158,7 +180,7 @@ function newmodule_delete_instance($id) {
  *
  * @return stdClass|null
  */
-function newmodule_user_outline($course, $user, $mod, $newmodule) {
+function feedcam_user_outline($course, $user, $mod, $feedcam) {
 
     $return = new stdClass();
     $return->time = 0;
@@ -173,20 +195,20 @@ function newmodule_user_outline($course, $user, $mod, $newmodule) {
  * @param stdClass $course the current course record
  * @param stdClass $user the record of the user we are generating report for
  * @param cm_info $mod course module info
- * @param stdClass $newmodule the module instance record
+ * @param stdClass $feedcam the module instance record
  * @return void, is supposed to echp directly
  */
-function newmodule_user_complete($course, $user, $mod, $newmodule) {
+function feedcam_user_complete($course, $user, $mod, $feedcam) {
 }
 
 /**
  * Given a course and a time, this module should find recent activity
- * that has occurred in newmodule activities and print it out.
+ * that has occurred in feedcam activities and print it out.
  * Return true if there was output, or false is there was none.
  *
  * @return boolean
  */
-function newmodule_print_recent_activity($course, $viewfullnames, $timestart) {
+function feedcam_print_recent_activity($course, $viewfullnames, $timestart) {
     return false;  //  True if anything was printed, otherwise false
 }
 
@@ -195,7 +217,7 @@ function newmodule_print_recent_activity($course, $viewfullnames, $timestart) {
  *
  * This callback function is supposed to populate the passed array with
  * custom activity records. These records are then rendered into HTML via
- * {@link newmodule_print_recent_mod_activity()}.
+ * {@link feedcam_print_recent_mod_activity()}.
  *
  * @param array $activities sequentially indexed array of objects with the 'cmid' property
  * @param int $index the index in the $activities to use for the next record
@@ -206,15 +228,15 @@ function newmodule_print_recent_activity($course, $viewfullnames, $timestart) {
  * @param int $groupid check for a particular group's activity only, defaults to 0 (all groups)
  * @return void adds items into $activities and increases $index
  */
-function newmodule_get_recent_mod_activity(&$activities, &$index, $timestart, $courseid, $cmid, $userid=0, $groupid=0) {
+function feedcam_get_recent_mod_activity(&$activities, &$index, $timestart, $courseid, $cmid, $userid=0, $groupid=0) {
 }
 
 /**
- * Prints single activity item prepared by {@see newmodule_get_recent_mod_activity()}
+ * Prints single activity item prepared by {@see feedcam_get_recent_mod_activity()}
 
  * @return void
  */
-function newmodule_print_recent_mod_activity($activity, $courseid, $detail, $modnames, $viewfullnames) {
+function feedcam_print_recent_mod_activity($activity, $courseid, $detail, $modnames, $viewfullnames) {
 }
 
 /**
@@ -225,23 +247,23 @@ function newmodule_print_recent_mod_activity($activity, $courseid, $detail, $mod
  * @return boolean
  * @todo Finish documenting this function
  **/
-function newmodule_cron () {
+function feedcam_cron () {
     return true;
 }
 
 /**
- * Returns an array of users who are participanting in this newmodule
+ * Returns an array of users who are participanting in this feedcam
  *
  * Must return an array of users who are participants for a given instance
- * of newmodule. Must include every user involved in the instance,
+ * of feedcam. Must include every user involved in the instance,
  * independient of his role (student, teacher, admin...). The returned
  * objects must contain at least id property.
  * See other modules as example.
  *
- * @param int $newmoduleid ID of an instance of this module
+ * @param int $feedcamid ID of an instance of this module
  * @return boolean|array false if no participants, array of objects otherwise
  */
-function newmodule_get_participants($newmoduleid) {
+function feedcam_get_participants($feedcamid) {
     return false;
 }
 
@@ -251,7 +273,7 @@ function newmodule_get_participants($newmoduleid) {
  * @example return array('moodle/site:accessallgroups');
  * @return array
  */
-function newmodule_get_extra_capabilities() {
+function feedcam_get_extra_capabilities() {
     return array();
 }
 
@@ -260,21 +282,21 @@ function newmodule_get_extra_capabilities() {
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Is a given scale used by the instance of newmodule?
+ * Is a given scale used by the instance of feedcam?
  *
- * This function returns if a scale is being used by one newmodule
+ * This function returns if a scale is being used by one feedcam
  * if it has support for grading and scales. Commented code should be
  * modified if necessary. See forum, glossary or journal modules
  * as reference.
  *
- * @param int $newmoduleid ID of an instance of this module
- * @return bool true if the scale is used by the given newmodule instance
+ * @param int $feedcamid ID of an instance of this module
+ * @return bool true if the scale is used by the given feedcam instance
  */
-function newmodule_scale_used($newmoduleid, $scaleid) {
+function feedcam_scale_used($feedcamid, $scaleid) {
     global $DB;
 
     /** @example */
-    if ($scaleid and $DB->record_exists('newmodule', array('id' => $newmoduleid, 'grade' => -$scaleid))) {
+    if ($scaleid and $DB->record_exists('feedcam', array('id' => $feedcamid, 'grade' => -$scaleid))) {
         return true;
     } else {
         return false;
@@ -282,18 +304,18 @@ function newmodule_scale_used($newmoduleid, $scaleid) {
 }
 
 /**
- * Checks if scale is being used by any instance of newmodule.
+ * Checks if scale is being used by any instance of feedcam.
  *
  * This is used to find out if scale used anywhere.
  *
  * @param $scaleid int
- * @return boolean true if the scale is used by any newmodule instance
+ * @return boolean true if the scale is used by any feedcam instance
  */
-function newmodule_scale_used_anywhere($scaleid) {
+function feedcam_scale_used_anywhere($scaleid) {
     global $DB;
 
     /** @example */
-    if ($scaleid and $DB->record_exists('newmodule', array('grade' => -$scaleid))) {
+    if ($scaleid and $DB->record_exists('feedcam', array('grade' => -$scaleid))) {
         return true;
     } else {
         return false;
@@ -301,44 +323,44 @@ function newmodule_scale_used_anywhere($scaleid) {
 }
 
 /**
- * Creates or updates grade item for the give newmodule instance
+ * Creates or updates grade item for the give feedcam instance
  *
  * Needed by grade_update_mod_grades() in lib/gradelib.php
  *
- * @param stdClass $newmodule instance object with extra cmidnumber and modname property
+ * @param stdClass $feedcam instance object with extra cmidnumber and modname property
  * @return void
  */
-function newmodule_grade_item_update(stdClass $newmodule) {
+function feedcam_grade_item_update(stdClass $feedcam) {
     global $CFG;
     require_once($CFG->libdir.'/gradelib.php');
 
     /** @example */
     $item = array();
-    $item['itemname'] = clean_param($newmodule->name, PARAM_NOTAGS);
+    $item['itemname'] = clean_param($feedcam->name, PARAM_NOTAGS);
     $item['gradetype'] = GRADE_TYPE_VALUE;
-    $item['grademax']  = $newmodule->grade;
+    $item['grademax']  = $feedcam->grade;
     $item['grademin']  = 0;
 
-    grade_update('mod/newmodule', $newmodule->course, 'mod', 'newmodule', $newmodule->id, 0, null, $item);
+    grade_update('mod/feedcam', $feedcam->course, 'mod', 'feedcam', $feedcam->id, 0, null, $item);
 }
 
 /**
- * Update newmodule grades in the gradebook
+ * Update feedcam grades in the gradebook
  *
  * Needed by grade_update_mod_grades() in lib/gradelib.php
  *
- * @param stdClass $newmodule instance object with extra cmidnumber and modname property
+ * @param stdClass $feedcam instance object with extra cmidnumber and modname property
  * @param int $userid update grade of specific user only, 0 means all participants
  * @return void
  */
-function newmodule_update_grades(stdClass $newmodule, $userid = 0) {
+function feedcam_update_grades(stdClass $feedcam, $userid = 0) {
     global $CFG, $DB;
     require_once($CFG->libdir.'/gradelib.php');
 
     /** @example */
     $grades = array(); // populate array of grade objects indexed by userid
 
-    grade_update('mod/newmodule', $newmodule->course, 'mod', 'newmodule', $newmodule->id, 0, $grades);
+    grade_update('mod/feedcam', $feedcam->course, 'mod', 'feedcam', $feedcam->id, 0, $grades);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -356,12 +378,12 @@ function newmodule_update_grades(stdClass $newmodule, $userid = 0) {
  * @param stdClass $context
  * @return array of [(string)filearea] => (string)description
  */
-function newmodule_get_file_areas($course, $cm, $context) {
+function feedcam_get_file_areas($course, $cm, $context) {
     return array();
 }
 
 /**
- * Serves the files from the newmodule file areas
+ * Serves the files from the feedcam file areas
  *
  * @param stdClass $course
  * @param stdClass $cm
@@ -371,16 +393,18 @@ function newmodule_get_file_areas($course, $cm, $context) {
  * @param bool $forcedownload
  * @return void this should never return to the caller
  */
-function newmodule_pluginfile($course, $cm, $context, $filearea, array $args, $forcedownload) {
+function feedcam_pluginfile($course, $cm, $context, $filearea, array $args, $forcedownload) {
     global $DB, $CFG;
 
-    if ($context->contextlevel != CONTEXT_MODULE) {
-        send_file_not_found();
-    }
-
+ //   if ($context->contextlevel != CONTEXT_MODULE) {
+ //       send_file_not_found();
+//    }
+   $itemid = array_shift($args);
     require_login($course, true, $cm);
+    
+    if (! $file = get_feedcam_file($cm->id,$itemid)) return false;
+    send_stored_file($file);
 
-    send_file_not_found();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -388,26 +412,54 @@ function newmodule_pluginfile($course, $cm, $context, $filearea, array $args, $f
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Extends the global navigation tree by adding newmodule nodes if there is a relevant content
+ * Extends the global navigation tree by adding feedcam nodes if there is a relevant content
  *
  * This can be called by an AJAX request so do not rely on $PAGE as it might not be set up properly.
  *
- * @param navigation_node $navref An object representing the navigation tree node of the newmodule module instance
+ * @param navigation_node $navref An object representing the navigation tree node of the feedcam module instance
  * @param stdClass $course
  * @param stdClass $module
  * @param cm_info $cm
  */
-function newmodule_extend_navigation(navigation_node $navref, stdclass $course, stdclass $module, cm_info $cm) {
+function feedcam_extend_navigation(navigation_node $navref, stdclass $course, stdclass $module, cm_info $cm) {
 }
 
 /**
- * Extends the settings navigation with the newmodule settings
+ * Extends the settings navigation with the feedcam settings
  *
- * This function is called when the context for the page is a newmodule module. This is not called by AJAX
+ * This function is called when the context for the page is a feedcam module. This is not called by AJAX
  * so it is safe to rely on the $PAGE.
  *
  * @param settings_navigation $settingsnav {@link settings_navigation}
- * @param navigation_node $newmodulenode {@link navigation_node}
+ * @param navigation_node $feedcamnode {@link navigation_node}
  */
-function newmodule_extend_settings_navigation(settings_navigation $settingsnav, navigation_node $newmodulenode=null) {
+function feedcam_extend_settings_navigation(settings_navigation $settingsnav, navigation_node $feedcamnode=null) {
 }
+
+
+
+function get_feedcam_file($course_module_id,$mid) {
+    
+    $context = context_module::instance($course_module_id);
+    $fs = get_file_storage();
+    $files = $fs->get_area_files($context->id, 'mod_feedcam', 'feedcam_docs', $mid, $sort = false, $includedirs = false);
+    if (!count($files)) return false;
+    return array_shift($files);
+} // function get_feedcam_file
+
+
+
+function get_feedcam_doc_url($mid) {
+    global $id; // the course_module id
+    if (! $file = get_feedcam_file($id,$mid)) return false;
+    return moodle_url::make_pluginfile_url(
+        $file->get_contextid(),
+        $file->get_component(),
+        $file->get_filearea(),
+        $file->get_itemid(),
+        $file->get_filepath(),
+        $file->get_filename(),
+        $forcedownload = false);
+} // function get_feedcam_doc_url
+
+

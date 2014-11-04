@@ -4,7 +4,7 @@
 
  *
  * @package    mod
- * @subpackage newmodule
+ * @subpackage feedcam
  * @copyright  2014 krishna
  * @license    http://www.vidyamantra.com
  */
@@ -13,18 +13,25 @@ require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 //require_once(dirname(__FILE__).'/lib.php');
 global $DB;
 
+$cmid = optional_param('cmid', 0, PARAM_INT);
+//$id= $_GET['cmid'];
+if ($cmid) {
+    $cm         = get_coursemodule_from_id('feedcam', $cmid, 0, false, MUST_EXIST);
+    $course     = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
+    $feedcam  = $DB->get_record('feedcam', array('id' => $cm->instance), '*', MUST_EXIST);
+} 
 
 
-
-echo '<script src="http://localhost/moodle27d/mod/newmodule/js/need.js"></script>';
+echo '<script src="http://localhost/moodle27d/mod/feedcam/js/need.js"></script>';
 
 echo '<body>';
 echo '<fieldset><legend><font color="black"  size="4"><b style="font-family:  "Hoefler Text", Georgia, "Times New Roman", serif;">RECORDINGS </b></font> </legend>';
 
-$id2='';
-$url2='';
+$id2='';$url2='';$feedcamid='';
 
        if(isset($_GET['id'])){
+           
+           $feedcamid=$_GET['feedcamid'];
            
            $id=$_GET['id'];
            $id2=$id+1;
@@ -35,6 +42,14 @@ $url2='';
            foreach ($query as $value) { 
                     $url=  $value->url;
                     $name=$value->name;
+                    
+                  if(!($DB->record_exists('feedcam_watching', array('user_id' =>$USER->id, 'feedcam_id'=>$feedcamid, 'video_id'=>$id)))){  
+                     $record1 = new stdClass();
+                     $record1->user_id = $USER->id;
+                     $record1->feedcam_id = $feedcamid;
+                     $record1->video_id=$id;
+                     $lastinsertid1 = $DB->insert_record('feedcam_watching', $record1, false);
+                  }
                }
            
          //  while($row=mysqli_fetch_assoc($query)){
@@ -50,6 +65,14 @@ $url2='';
             foreach ($query2 as $value2) { 
                 $url2=  $value2->url;
                 $name2=$value2->name;
+                
+               if(!($DB->record_exists('feedcam_watching', array('user_id' =>$USER->id, 'feedcam_id'=>$feedcamid, 'video_id'=>$id2)))){
+                     $record2 = new stdClass();
+                     $record2->user_id = $USER->id;
+                     $record2->feedcam_id = $feedcamid;
+                     $record2->video_id=$id2;
+                     $lastinsertid2 = $DB->insert_record('feedcam_watching', $record2, false);
+               }
             }
            
                echo "<font color='green'><b><div align='center'>you are watching : ".$name." .wav </b><br/><br/></font>";
@@ -81,9 +104,9 @@ $url2='';
                  
               // echo "<video src='$url' id='video' style='border: 1px solid rgb(15, 158, 238); height: 500px; width: 700px;' autoplay></video></div><br/><br/>";
               
-            //  echo '<script type="text/javascript" charset="utf-8" src="/mod/newmodule/js/need.js"></script>';
-           // $PAGE->requires->js('/mod/newmodule/js/need.js'); 
-//            $PAGE->requires->js('/mod/newmodule/js/need.js');		
+            //  echo '<script type="text/javascript" charset="utf-8" src="/mod/feedcam/js/need.js"></script>';
+           // $PAGE->requires->js('/mod/feedcam/js/need.js'); 
+//            $PAGE->requires->js('/mod/feedcam/js/need.js');		
 
                 
              echo '<div id="video-container">';

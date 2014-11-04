@@ -1,6 +1,6 @@
 //$(function() {    
 ///   $("#other").click(function() {
- //      $('#result').load('/mod/newmodule/videos.php');
+ //      $('#result').load('/mod/feedcam/videos.php');
 //   });   
 //});
 

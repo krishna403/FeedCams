@@ -16,34 +16,35 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Prints a particular instance of newmodule
+ * Prints a particular instance of feedcam
  *
  * You can have a rather longer description of the file as well,
  * if you like, and it can span multiple lines.
  *
  * @package    mod
- * @subpackage newmodule
+ * @subpackage feedcam
  * @copyright  2011 Your Name
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-/// (Replace newmodule with the name of your module and remove this line)
+/// (Replace feedcam with the name of your module and remove this line)
 
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once(dirname(__FILE__).'/lib.php');
+require_once(dirname(__FILE__).'/locallib.php');
 require_once ($CFG->dirroot.'/course/moodleform_mod.php');
 
 $id = optional_param('id', 0, PARAM_INT); // course_module ID, or
-$n  = optional_param('n', 0, PARAM_INT);  // newmodule instance ID - it should be named as the first character of the module
+$n  = optional_param('n', 0, PARAM_INT);  // feedcam instance ID - it should be named as the first character of the module
 
 if ($id) {
-    $cm         = get_coursemodule_from_id('newmodule', $id, 0, false, MUST_EXIST);
+    $cm         = get_coursemodule_from_id('feedcam', $id, 0, false, MUST_EXIST);
     $course     = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
-    $newmodule  = $DB->get_record('newmodule', array('id' => $cm->instance), '*', MUST_EXIST);
+    $feedcam  = $DB->get_record('feedcam', array('id' => $cm->instance), '*', MUST_EXIST);
 } elseif ($n) {
-    $newmodule  = $DB->get_record('newmodule', array('id' => $n), '*', MUST_EXIST);
-    $course     = $DB->get_record('course', array('id' => $newmodule->course), '*', MUST_EXIST);
-    $cm         = get_coursemodule_from_instance('newmodule', $newmodule->id, $course->id, false, MUST_EXIST);
+    $feedcam  = $DB->get_record('feedcam', array('id' => $n), '*', MUST_EXIST);
+    $course     = $DB->get_record('course', array('id' => $feedcam->course), '*', MUST_EXIST);
+    $cm         = get_coursemodule_from_instance('feedcam', $feedcam->id, $course->id, false, MUST_EXIST);
 } else {
     error('You must specify a course_module ID or an instance ID');
 }
@@ -52,19 +53,19 @@ require_login($course, true, $cm);
 $context = context_module::instance($cm->id);
 //$context = get_context_instance(CONTEXT_MODULE, $cm->id);
 
-add_to_log($course->id, 'newmodule', 'view', "view.php?id={$cm->id}", $newmodule->name, $cm->id);
+add_to_log($course->id, 'feedcam', 'view', "view.php?id={$cm->id}", $feedcam->name, $cm->id);
 
 /// Print the page header
 
-$PAGE->set_url('/mod/newmodule/view.php', array('id' => $cm->id));
-$PAGE->set_title(format_string($newmodule->name));
+$PAGE->set_url('/mod/feedcam/view.php', array('id' => $cm->id));
+$PAGE->set_title(format_string($feedcam->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($context);
 
 // other things you may want to set - remove if not needed
 //$PAGE->set_cacheable(false);
 //$PAGE->set_focuscontrol('some-html-id');
-//$PAGE->add_body_class('newmodule-'.$somevar);
+//$PAGE->add_body_class('feedcam-'.$somevar);
 
 $completion = new completion_info($course);
 $completion->set_module_viewed($cm);
@@ -72,13 +73,13 @@ $completion->set_module_viewed($cm);
 // Output starts here                         
 echo $OUTPUT->header();
 
-if ($newmodule->intro) { // Conditions to show the intro can change to look for own settings or whatever
-    echo $OUTPUT->box(format_module_intro('newmodule', $newmodule, $cm->id), 'generalbox mod_introbox', 'newmoduleintro');
+if ($feedcam->intro) { // Conditions to show the intro can change to look for own settings or whatever
+    echo $OUTPUT->box(format_module_intro('feedcam', $feedcam, $cm->id), 'generalbox mod_introbox', 'feedcamintro');
 }
 
 // Replace the following lines with you own code
 
-$PAGE->requires->js('/mod/newmodule/js/record.js');
+$PAGE->requires->js('/mod/feedcam/js/record.js');
 //require_capability($capability, $context);
 //$_SESSION['id']=0;
 
@@ -118,7 +119,7 @@ if(((!isset($_POST['database'])) && (!isset($_POST['delete'])) && !isset($_POST[
 
 
                echo '<div class="page">';
-                echo  "<fieldset><legend><font color='black'  size='4'><b>LECTUREs TUBE </b> </legend>";
+                echo  "<fieldset><legend><font color='black'  size='4'><b>FEED CAM </b> </legend>";
                 
                     
                             //   $DB->get_records_sql('SELECT subname,subid FROM {videos}');
@@ -156,7 +157,7 @@ if(((!isset($_POST['database'])) && (!isset($_POST['delete'])) && (isset($_POST[
 				echo '<p style="text-align:center;">';
 				echo '<video id="preview" controls style="border: 1px solid rgb(15, 158, 238); height: 360px; width: 520px;"></video> <br/>';
                                    
-                                 if (has_capability('mod/newmodule:godatabase', $context)) {
+                                 if (has_capability('mod/feedcam:godatabase', $context)) {
                                    echo  '<form method=post action="" ><input type="submit" value="Recording Database" name="database" /></form>';
                                  }
 				echo'</p>';
@@ -172,13 +173,13 @@ if(((!isset($_POST['database'])) && (!isset($_POST['delete'])) && (isset($_POST[
 				
 				
 					
-			     if (has_capability('mod/newmodule:record', $context)) {
+			     if (has_capability('mod/feedcam:record', $context)) {
                                 echo '<button id="record" style="height: 40px; width: 180px;">Record &RightTriangleBar;</button>';
                              }
                              
                               echo '<button id="stop" style="height: 40px; width: 180px;" disabled>Stop &FilledSmallSquare;</button>';
                                  
-                            if (has_capability('mod/newmodule:deleterecent', $context)) {
+                            if (has_capability('mod/feedcam:deleterecent', $context)) {
                          	     echo '<button id="delete" style="height: 40px; width: 180px;" disabled>Delete files</button>';
                            }
 
@@ -186,7 +187,13 @@ if(((!isset($_POST['database'])) && (!isset($_POST['delete'])) && (isset($_POST[
                 echo '</fieldset>';               
              echo '</section>';
             
-	$PAGE->requires->js('/mod/newmodule/js/record2.js');		
+             //$id = optional_param('id', 0, PARAM_INT); // course_module ID
+             
+            // echo $id;
+           //  exit();
+             
+         echo '<script>window.uniqueId ='.$id.' </script>';
+	$PAGE->requires->js('/mod/feedcam/js/record2.js');		
            
 			
        echo '</article>';
@@ -207,33 +214,54 @@ if(((isset($_POST['database'])) || (isset($_POST['delete']))  || !isset($_POST['
        
          //    global $DB;
 
-            if(isset($_POST['delete']))  {   
-                if(isset($_POST['name'])){ 
-                    
-                        $names=$_POST['name'];
-                      $conn=mysqli_connect('localhost','root',"mummy","moodle27d");
-                       
-                      foreach($names as $value){
-                                      echo "<div  style='float:right;'><font color='#A80707'><b>".$value." , </font></b></div>";
+          if(isset($_POST['delete']))  {   
+                $names=$_POST['videoarr'];
+                  foreach($names as $value){
+                      
+                      $idarr=array();
+                     if(isset($value)){
+                              
+                               $idarr = (explode('/',$value,2));
+                               $itemid=$idarr[0];
+                               $itemname=$idarr[1];
                                
-                           if(!file_exists('uploads/'.$value)){
-                                echo "Sorry Video had been currupted and did not stored on server<br /><br/>";
-                                 mysqli_query($conn,"DELETE FROM mdl_videos WHERE name='$value' ");   //db
+                          echo "<div  style='float:right;'><font color='#A80707'><b>".$itemid." |  </font></b></div>";
+                               
+                               
+                            if(!($DB->record_exists('files', array('contextid' =>$context->id, 'itemid'=>$itemid)))){  
+
+                                 $DB->delete_records('videos', array ('id'=> $itemid));
+                                 echo "<div><font color='#A80707'>Sorry, Currupted media and did not store on server<font></div>";
+                                 // mysqli_query($conn,"DELETE FROM mdl_videos WHERE name='$withvideoext' OR name='$withaudioext' ");
+
+                                 //  $DB->delete_records("videos", array("name"=>$value));
+                            }
+
+                             else{
+                                     fileDeletion($itemid,$itemname,$context->id);
+                                     fileDeletion($itemid,".",$context->id);
+
+                                        $vid=$DB->delete_records('videos', array ('id'=> $itemid));
+                              }
+                         //  if(!file_exists('uploads/'.$value)){
+                        //        echo "Sorry Video had been currupted and did not stored on server<br /><br/>";
+                        //         mysqli_query($conn,"DELETE FROM mdl_videos WHERE name='$value' ");   //db
                                  
                              //  $DB->delete_records("videos", array(sql_compare_text("name")=>$value));
-                           }
+                       //    }
                            
-                            else{
-                                 unlink('uploads/'.$value);
+                       //     else{
+                       //          unlink('uploads/'.$value);
                                  
-                                 mysqli_query($conn,"DELETE FROM mdl_videos WHERE name='$value' ");  //db
-                             //   $DB->delete_records("videos", array(sql_compare_text("name")=>$value));
-                             }
+                       //          mysqli_query($conn,"DELETE FROM mdl_videos WHERE name='$value' ");  //db
+                           //   $DB->delete_records("videos", array(sql_compare_text("name")=>$value));
+                        //     }
                                  
-                         }
-                         
-                      echo "<div><font color='#A80707'> Successfully Deleted </font></div>";   
-                }
+                       }
+                          
+                  }
+                  echo "<div><font color='#A80707'> Successfully Deleted </font></div>"; 
+             
            }
  
   
@@ -259,7 +287,7 @@ if(((isset($_POST['database'])) || (isset($_POST['delete']))  || !isset($_POST['
           
             // echo '';
             
-            if (has_capability('mod/newmodule:deletemultiple', $context)) {
+            if (has_capability('mod/feedcam:deletemultiple', $context)) {
                echo '<td><form action="" method=post><input type="submit" value="Delete Videos" name="delete" title="Delete" style="height: 40px; width: 180px;" /></div></td>';
             }
             
@@ -271,21 +299,28 @@ if(((isset($_POST['database'])) || (isset($_POST['delete']))  || !isset($_POST['
         
         
         foreach ($query as $value) { 
-                $id=  $value->id;
+                $id= $value->id;
+                $feedcamid= $value->feedcam_id;
+                $userid= $value->user_id;
                 $name=$value->name;
                 $urll=$value->url;
 
                 
-                 
+                $videoids=$id.'/'.$name;
+               // $url=get_feedcam_doc_url($vid);
+               //echo($url);
+               
+              //  echo($url);
+              // exit();
                                        
-                    $updateloginlink ="watch.php?id=$id";
+                 //   $updateloginlink ="watch.php?id=$vid";
                                    
                                   
 		   //  echo "<a href=\"javascript:create_window('$updateloginlink','500','800')\"><button id='edit' style='height: 40px; width: 200px;'>Update Login Data</button></a></td>";
                     
                // echo "<tr><td>$id</td><td><a href=\"javascript:create_window('watch.php?id=$id','500','800')\>$name</a><br /></td><td><input type=checkbox name=name[] value='$name' /></td></tr>";     
                // echo "<tr><td>$id</td><td><a href='watch.php?id=$id'>$name</a><br /></td><td><input type=checkbox name=name[] value='$name' /></td></tr>";
-                echo "<tr><td>$id</td><td><a  href=\"javascript:create_window('http://localhost/moodle27d/mod/newmodule/watch.php?id=$id')\">$name</a><br /></td><td><input type=checkbox name=name[] value='$name' /></td></tr>";
+                echo "<tr><td>$id</td><td><a  href=\"javascript:create_window('watch.php?id=$id&feedcamid=$feedcamid')\">$name</a><br /></td><td><input type=checkbox name=videoarr[] value='$videoids' /></td></tr>";
             }
             
             echo "</table></div>";

@@ -479,7 +479,6 @@ var Storage = {
 // encoder only supports 48k/16k mono audio channel
 
 /**
- * Implementation of https://dvcs.w3.org/hg/dap/raw-file/default/media-stream-capture/MediaRecorder.html
  * The MediaRecorder accepts a mediaStream as input source passed from UA. When recorder starts,
  * a MediaEncoder will be created and accept the mediaStream as input source.
  * Encoder will get the raw data by track data changes, encode it by selected MIME Type, then store the encoded in EncodedBufferCache object.

@@ -16,13 +16,13 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Internal library of functions for module newmodule
+ * Internal library of functions for module feedcam
  *
- * All the newmodule specific functions, needed to implement the module
+ * All the feedcam specific functions, needed to implement the module
  * logic, should go here. Never include this file from your lib.php!
  *
  * @package    mod
- * @subpackage newmodule
+ * @subpackage feedcam
  * @copyright  2011 Your Name
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -35,6 +35,32 @@ defined('MOODLE_INTERNAL') || die();
  * @param array $things
  * @return object
  */
-//function newmodule_do_something_useful(array $things) {
+//function feedcam_do_something_useful(array $things) {
 //    return new stdClass();
 //}
+
+
+
+  
+   function fileDeletion($itemid,$filename,$contextid){
+        
+         $fs = get_file_storage();
+            // Prepare file record object
+            $fileinfo = array(
+                'component' => 'mod_feedcam',
+                'filearea' => 'feedcam_docs',     // usually = table name
+                'itemid' =>  $itemid,        // usually = ID of row in table
+                'contextid' => $contextid,      // ID of context
+                'filepath' => '/',               // any path beginning and ending in /
+                'filename' => $filename);    // any filename
+
+            // Get file
+            $file = $fs->get_file($fileinfo['contextid'], $fileinfo['component'], $fileinfo['filearea'], 
+                    $fileinfo['itemid'], $fileinfo['filepath'], $fileinfo['filename']);
+
+            // Delete it if it exists
+            if ($file) {
+                $file->delete();
+            }
+        
+    }

@@ -3,7 +3,7 @@
  * save and upload the audio video files into directories and link of files in database
 
  * @package    mod
- * @subpackage newmodule
+ * @subpackage feedcam
  * @copyright  2014 krishna
  * @license    http://www.vidyamantra.com
  */

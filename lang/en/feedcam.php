@@ -17,34 +17,34 @@
 
 
 /**
- * English strings for newmodule
+ * English strings for feedcam
  *
  * You can have a rather longer description of the file as well,
  * if you like, and it can span multiple lines.
  *
  * @package    mod
- * @subpackage newmodule
+ * @subpackage feedcam
  * @copyright  2011 Your Name
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['modulename'] = 'newmodule';
-$string['modulenameplural'] = 'newmodules';
-$string['modulename_help'] = 'Use the newmodule module for... | The newmodule module allows...';
-$string['newmodulefieldset'] = 'Custom example fieldset';
-$string['newmodulename'] = 'newmodule name';
-$string['newmodulename_help'] = 'This is the content of the help tooltip associated with the newmodulename field. Markdown syntax is supported.';
-$string['newmodule'] = 'newmodule';
-$string['pluginadministration'] = 'newmodule administration';
-$string['pluginname'] = 'newmodule';
-$string['newmodule:view'] = 'view';
-$string['newmodule:submit'] = 'submit';
-$string['newmodule:record'] = 'record';
-$string['newmodule:godatabase'] = 'godatabase';
-$string['newmodule:deleterecent'] = 'deleterecent';
-$string['newmodule:deletemultiple'] = 'deletemultiple';
+$string['modulename'] = 'Feedcam';
+$string['modulenameplural'] = 'feedcams';
+$string['modulename_help'] = 'Use the feedcam module for... | The feedcam module allows...';
+$string['feedcamfieldset'] = 'Custom example fieldset';
+$string['feedcamname'] = 'feedcam name';
+$string['feedcamname_help'] = 'This is the content of the help tooltip associated with the feedcamname field. Markdown syntax is supported.';
+$string['feedcam'] = 'feedcam';
+$string['pluginadministration'] = 'feedcam administration';
+$string['pluginname'] = 'feedcam';
+$string['feedcam:view'] = 'view';
+$string['feedcam:submit'] = 'submit';
+$string['feedcam:record'] = 'record';
+$string['feedcam:godatabase'] = 'godatabase';
+$string['feedcam:deleterecent'] = 'deleterecent';
+$string['feedcam:deletemultiple'] = 'deletemultiple';
 $string['completionrecord'] = 'Student must record the video lacture:';
 //$string['completionrecordhelp'] = 'requiring recordings and feedbacks to complete';
 $string['completionwatch'] = 'Student must watch the video lactures:';
