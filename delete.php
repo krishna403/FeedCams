@@ -83,17 +83,11 @@ if (isset($_POST['delete-file'])) {
                                 
                        $vid=$DB->delete_records('videos', array ('id'=> $videoitemid));
                        $aud=$DB->delete_records('videos', array ('id'=> $audioitemid));
-                      
-                       echo $vid."  ".$aud;
                     // mysqli_query($conn,"DELETE FROM mdl_videos WHERE name='$withvideoext' OR name='$withaudioext' ");
                      // $DB->delete_records("mdl_videos", array('name'=>$withvideoext));
                      // $DB->delete_records("mdl_videos", array('name'=>$withaudioext));
                      echo "$withvideoext and $withaudioext has been successfully deleted !!";
                  //   $DB->delete_records("videos", array(sql_compare_text("name")=>$value));
                  }
-    
     }
-    
-    
-  
 ?>
