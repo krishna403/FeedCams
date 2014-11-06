@@ -27,7 +27,7 @@ namespace mod_feedcam\event;
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * The mod_feedcam video submitted event class.
+ * The mod_feedcam video revealed event class.
  *
  * @property-read array $other {
  *      Extra information about event.
@@ -41,7 +41,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2013 Adrian Greeve <adrian@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class video_submitted extends \core\event\base {
+class video_revealed extends \core\event\base {
 
     /**
      * Returns description of what happened.
@@ -49,7 +49,7 @@ class video_submitted extends \core\event\base {
      * @return string
      */
     public function get_description() {
-        return "The user with id '$this->userid' record the video with id '$this->objectid' in the feedcam activity
+        return "The user with id '$this->userid' watched the video with id '$this->objectid' in the feedcam activity
             with the course module id '$this->contextinstanceid'.";
     }
 
@@ -75,7 +75,7 @@ class video_submitted extends \core\event\base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventvideocreated', 'mod_feedcam');
+        return get_string('eventvideorevealed', 'mod_feedcam');
     }
 
     /**

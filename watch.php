@@ -10,8 +10,10 @@
  */
 
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
+require_once(dirname(__FILE__).'/lib.php');
+require_once ($CFG->dirroot.'/course/moodleform_mod.php');
+global $DB,$USER;
 //require_once(dirname(__FILE__).'/lib.php');
-global $DB;
 
 $cmid = optional_param('cmid', 0, PARAM_INT);
 //$id= $_GET['cmid'];
@@ -22,8 +24,10 @@ if ($cmid) {
 } 
 
 
-echo '<script src="http://localhost/moodle27d/mod/feedcam/js/need.js"></script>';
+$context = context_module::instance($cm->id);
 
+//echo '<script src="http://localhost/moodle27d/mod/feedcam/js/need.js"></script>';
+$PAGE->requires->js('/mod/feedcam/js/need.js');
 echo '<body>';
 echo '<fieldset><legend><font color="black"  size="4"><b style="font-family:  "Hoefler Text", Georgia, "Times New Roman", serif;">RECORDINGS </b></font> </legend>';
 
@@ -31,7 +35,7 @@ $id2='';$url2='';$feedcamid='';
 
        if(isset($_GET['id'])){
            
-           $feedcamid=$_GET['feedcamid'];
+           $feedcamid=$feedcam->id;
            
            $id=$_GET['id'];
            $id2=$id+1;
@@ -128,6 +132,19 @@ $id2='';$url2='';$feedcamid='';
                         
                        echo '</div>';
                      echo '</div>';
+                     
+                     
+                     
+                     $eventdata = array();
+            $eventdata['context'] = $context;
+            $eventdata['objectid'] = $id;
+            $eventdata['userid'] = $USER->id;
+            $eventdata['courseid'] = $course->id;
+
+            $event = \mod_feedcam\event\video_revealed::create($eventdata);
+            $event->add_record_snapshot('course', $course);
+            $event->add_record_snapshot('course_modules', $cm);
+            $event->trigger();  
  
        }
        

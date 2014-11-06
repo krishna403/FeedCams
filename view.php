@@ -310,14 +310,14 @@ if(((isset($_POST['database'])) || (isset($_POST['delete']))  || !isset($_POST['
         
         
         foreach ($query as $value) { 
-                $id= $value->id;
+                $vid= $value->id;
                 $feedcamid= $value->feedcam_id;
                 $userid= $value->user_id;
                 $name=$value->name;
                 $urll=$value->url;
 
-                
-                $videoids=$id.'/'.$name;
+               
+                $videoids=$vid.'/'.$name;
                
                // $url=get_feedcam_doc_url($vid);
                //echo($url);
@@ -332,7 +332,7 @@ if(((isset($_POST['database'])) || (isset($_POST['delete']))  || !isset($_POST['
                     
                // echo "<tr><td>$id</td><td><a href=\"javascript:create_window('watch.php?id=$id','500','800')\>$name</a><br /></td><td><input type=checkbox name=name[] value='$name' /></td></tr>";     
                // echo "<tr><td>$id</td><td><a href='watch.php?id=$id'>$name</a><br /></td><td><input type=checkbox name=name[] value='$name' /></td></tr>";
-                echo "<tr><td>$id</td><td><a  href=\"javascript:create_window('watch.php?id=$id&feedcamid=$feedcamid')\">$name</a><br /></td><td><input type=checkbox name=videoarr[] value='$videoids' /></td></tr>";
+                echo "<tr><td>$vid</td><td><a  href=\"javascript:create_window('watch.php?id=$vid&cmid=$id')\">$name</a><br /></td><td><input type=checkbox name=videoarr[] value='$videoids' /></td></tr>";
             }
             
             echo "</table></div>";
