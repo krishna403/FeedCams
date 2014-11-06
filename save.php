@@ -49,8 +49,7 @@ if ($id) {
     $feedcam  = $DB->get_record('feedcam', array('id' => $cm->instance), '*', MUST_EXIST);
 } 
 
-
-
+$context = context_module::instance($cm->id);
 
 foreach(array('video', 'audio') as $type) {
     
@@ -106,7 +105,7 @@ foreach(array('video', 'audio') as $type) {
            //print_r($mediaid);    
                
       //  $file_storage = get_file_storage();
-        $context = context_module::instance($id);
+      //  $context = context_module::instance($id);
         
             $fileinfo = array(
                 'contextid' => $context->id,
@@ -174,8 +173,23 @@ foreach(array('video', 'audio') as $type) {
              //  exit();
                
              //   $url="http://localhost/moodle27d/mod/feedcam/uploads/$fileName";
-         
+          
         
     }
 }
+
+                $eventdata1 = array();
+            $eventdata1['context'] = $context;
+            $eventdata1['objectid'] = $mediaid;
+            $eventdata1['userid'] = $USER->id;
+            $eventdata1['courseid'] = $course->id;
+
+            $event = \mod_feedcam\event\video_submitted::create($eventdata1);
+            $event->add_record_snapshot('course', $course);
+            $event->add_record_snapshot('course_modules', $cm);
+            $event->trigger();  
+
+  
+
+
 ?>

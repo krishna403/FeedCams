@@ -53,8 +53,19 @@ require_login($course, true, $cm);
 $context = context_module::instance($cm->id);
 //$context = get_context_instance(CONTEXT_MODULE, $cm->id);
 
-add_to_log($course->id, 'feedcam', 'view', "view.php?id={$cm->id}", $feedcam->name, $cm->id);
+//add_to_log($course->id, 'feedcam', 'view', "view.php?id={$cm->id}", $feedcam->name, $cm->id);
 
+ $eventdata = array();
+    $eventdata['objectid'] = $feedcam->id;
+    $eventdata['context'] = $context;
+
+    $event = \mod_feedcam\event\course_module_viewed::create($eventdata);
+    $event->add_record_snapshot('course_modules', $cm);
+    $event->add_record_snapshot('course', $course);
+    $event->trigger();
+
+    
+ 
 /// Print the page header
 
 $PAGE->set_url('/mod/feedcam/view.php', array('id' => $cm->id));
@@ -115,7 +126,7 @@ if(isset($_POST['back'])){
 if(((!isset($_POST['database'])) && (!isset($_POST['delete'])) && !isset($_POST['submit']) && !isset($_POST['back'])) && $_SESSION['flip']==0){
     
     
-              $conn= mysqli_connect('localhost','root',"mummy","quizmantra");
+         //     $conn= mysqli_connect('localhost','root',"mummy","quizmantra");
 
 
                echo '<div class="page">';

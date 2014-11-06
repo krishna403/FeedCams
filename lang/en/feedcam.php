@@ -48,6 +48,8 @@ $string['feedcam:deletemultiple'] = 'deletemultiple';
 $string['completionrecord'] = 'Student must record the video lacture:';
 //$string['completionrecordhelp'] = 'requiring recordings and feedbacks to complete';
 $string['completionwatch'] = 'Student must watch the video lactures:';
+$string['eventvideocreated'] = 'Recorded video has been submitted';
+$string['eventreportviewed'] = 'Feedcam report viewed';
 //$string['completionwatchhelp'] = 'requiring recordings and feedbacks to complete';
 
 

@@ -38,7 +38,13 @@ $course = $DB->get_record('course', array('id' => $id), '*', MUST_EXIST);
 
 require_course_login($course);
 
-add_to_log($course->id, 'feedcam', 'view all', 'index.php?id='.$course->id, '');
+//add_to_log($course->id, 'feedcam', 'view all', 'index.php?id='.$course->id, '');
+
+
+$eventdata = array('context' => context_course::instance($id));
+    $event = \mod_feedcam\event\course_module_instance_list_viewed::create($eventdata);
+    $event->add_record_snapshot('course', $course);
+    $event->trigger();
 
 $coursecontext = get_context_instance(CONTEXT_COURSE, $course->id);
 
