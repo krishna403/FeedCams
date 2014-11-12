@@ -57,7 +57,7 @@ function feedcam_supports($feature) {
         case FEATURE_COMPLETION_HAS_RULES:    return true;
         case FEATURE_GRADE_HAS_GRADE:         return false;
         case FEATURE_GRADE_OUTCOMES:          return false;
-        case FEATURE_BACKUP_MOODLE2:          return false;
+        case FEATURE_BACKUP_MOODLE2:          return true;
         case FEATURE_SHOW_DESCRIPTION:        return false;
       //  case FEATURE_COMPLETION_HAS_RULES: return true;
         default: return null;
@@ -67,38 +67,44 @@ function feedcam_supports($feature) {
 
 
 function feedcam_get_completion_state($course, $cm, $userid, $type) {
-    global $CFG,$DB;
+    global $CFG,$DB,$USER;
 
+   // echo $cm->instance;
+    echo $USER->id;
      $feedcam = $DB->get_record('feedcam', array('id'=>$cm->instance), '*', MUST_EXIST);
 
     // If completion option is enabled, evaluate it and return true/false
     if($feedcam->completionrecord && (!($feedcam->completionrecord && $feedcam->completionwatch))) {
         
-       // print_r('rec');
+     //  print_r('rec');
       // print_r($cm->instance);
       // echo '______________';
      //  print_r($feedcam->id);
       //  $countvid= $DB->count_records('videos', array('feedcam_id' => $feedcam->id, 'user_id' => $userid));
-        return $DB->record_exists('videos', array('feedcam_id'=>$cm->instance, 'user_id'=>$userid));
+        
+        echo $DB->record_exists('videos', array('feedcam_id'=>$cm->instance, 'user_id'=>$USER->id));
+        
+        return $DB->record_exists('videos', array('feedcam_id'=>$cm->instance, 'user_id'=>$USER->id));
+        
     } 
     
-   else if($feedcam->completionwatch && (!($feedcam->completionrecord && $feedcam->completionwatch))) {
+   if($feedcam->completionwatch && (!($feedcam->completionrecord && $feedcam->completionwatch))) {
         
       //  print_r('wat');
-        return $DB->record_exists('feedcam_watching', array('user_id'=>$userid, 'feedcam_id'=>$cm->instance));
+        return $DB->record_exists('feedcam_watching', array('user_id'=>$USER->id, 'feedcam_id'=>$cm->instance));
     } 
     
-    else if(($feedcam->completionrecord && $feedcam->completionwatch)) {
+    if(($feedcam->completionrecord && $feedcam->completionwatch)) {
         
-    //    print_r('both');
-        $rec=$DB->record_exists('videos', array('feedcam_id'=>$cm->instance, 'user_id'=>$userid));
-        $wat=$DB->record_exists('feedcam_watching', array('user_id'=>$userid, 'feedcam_id'=>$cm->instance));
+     //   print_r('both');
+        $rec=$DB->record_exists('videos', array('feedcam_id'=>$cm->instance, 'user_id'=>$USER->id));
+        $wat=$DB->record_exists('feedcam_watching', array('user_id'=>$USER->id, 'feedcam_id'=>$cm->instance));
         
         return ($rec && $wat);
     }
     
     else {
-    //    print_r('nothing');
+      //  print_r('nothing');
         // Completion option is not enabled so just return $type
         return $type;
     }

@@ -161,7 +161,13 @@ function add_completion_rules() {
 
     
     function completion_rule_enabled($data) {
-        return (!empty($data['completionrecord']) || !empty($data['completionwatch']));
+        
+        if(!empty($data['completionrecord'])){
+            return $data['completionrecord'];
+        }
+          else {
+              return $data['completionwatch'];
+          }
     }
     
     
@@ -185,6 +191,19 @@ function add_completion_rules() {
        
     }*/
     
-    
+   /* 
+    function data_preprocessing(&$default_values){
+    // [Existing code, not shown]
+
+    // Set up the completion checkboxes which aren't part of standard data.
+    // We also make the default value (if you turn on the checkbox) for those
+    // numbers to be 1, this will not apply unless checkbox is ticked.
+    $default_values['completionrecord']=
+        !empty($default_values['completionrecord']) ? 1 : 0;
+    if(empty($default_values['completionwatch'])) {
+        $default_values['completionwatch']=1;
+    }
+}
+    */
     
 }

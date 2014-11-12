@@ -17,6 +17,7 @@
 // ____________
 // RecordRTC.js
 
+
 function RecordRTC(mediaStream, config) {
     config = config || {};
 

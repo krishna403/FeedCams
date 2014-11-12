@@ -34,17 +34,27 @@ $context = context_module::instance($id);
 
 //$conn=mysqli_connect('localhost','root',"mummy","moodle27d");
  
-
+$files=array();
 
 
 if (isset($_POST['delete-file'])) {
   
+    
+    
+   // $files=$_POST['delete-file'];
+    $fiesstr= $_POST['delete-file'];
+    $files=explode(',',$_POST['delete-file']);
+    
+    
  //   $fileName = 'uploads/'.$_POST['delete-file'];
-    $name=$_POST['delete-file'];
-    $withvideoext=$_POST['delete-file'].'.webm';
-    $withaudioext=$_POST['delete-file'].'.wav';
+   // echo($_POST['delete-file']);
+   
+    print_r(sizeof($files));
     
-    
+    foreach ($files as $value) {
+        
+      $file=$value;
+  //  $withaudioext=
    // $vext="$withvideoext";
     
    // echo $withvideoext;
@@ -52,10 +62,8 @@ if (isset($_POST['delete-file'])) {
        // $videoitemid = $DB->get_record_sql('SELECT id FROM {videos} WHERE name = ?', array($withvideoext));
           //  $videoitemid = $DB->get_field('videos', 'id', array ('name' => $vext));
          $sql='SELECT id FROM {videos} WHERE name = ?';    
-         $videoitemid = $DB->get_field_sql($sql, array($withvideoext));
-         $audioitemid=$videoitemid+1;
-      //  print_r($videoitemid);
-     //   exit;
+         $fileid = $DB->get_field_sql($sql, array($file));
+      
         
         
     
@@ -64,10 +72,10 @@ if (isset($_POST['delete-file'])) {
         
     
       //  if(!file_exists('uploads/'.$withvideoext)){
-            if(!($DB->record_exists('files', array('contextid' =>$context->id, 'itemid'=>$videoitemid)))){  
+            if(!($DB->record_exists('files', array('contextid' =>$context->id, 'itemid'=>$fileid)))){  
                  
-                 $DB->delete_records('videos', array ('id'=> $videoitemid));
-                 $DB->delete_records('videos', array ('id'=> $audioitemid));
+                 $DB->delete_records('videos', array ('id'=> $fileid));
+                // $DB->delete_records('videos', array ('id'=> $audioitemid));
                  echo "Sorry, Video had been currupted and did not store on server<br /><br/>";
             //     mysqli_query($conn,"DELETE FROM mdl_videos WHERE name='$withvideoext' OR name='$withaudioext' ");
                     
@@ -76,18 +84,19 @@ if (isset($_POST['delete-file'])) {
 
                 else{
                     
-                    fileDeletion($videoitemid,$withvideoext,$context->id);
-                    fileDeletion($videoitemid,".",$context->id);
-                    fileDeletion($audioitemid,$withaudioext,$context->id);
-                    fileDeletion($audioitemid,".",$context->id);
+                    fileDeletion($fileid,$file,$context->id);
+                    fileDeletion($fileid,".",$context->id);
                                 
-                       $vid=$DB->delete_records('videos', array ('id'=> $videoitemid));
-                       $aud=$DB->delete_records('videos', array ('id'=> $audioitemid));
+                       $vid=$DB->delete_records('videos', array ('id'=> $fileid));
+                    //   $aud=$DB->delete_records('videos', array ('id'=> $audioitemid));
                     // mysqli_query($conn,"DELETE FROM mdl_videos WHERE name='$withvideoext' OR name='$withaudioext' ");
                      // $DB->delete_records("mdl_videos", array('name'=>$withvideoext));
                      // $DB->delete_records("mdl_videos", array('name'=>$withaudioext));
-                     echo "$withvideoext and $withaudioext has been successfully deleted !!";
+                     echo "$file, ";
                  //   $DB->delete_records("videos", array(sql_compare_text("name")=>$value));
-                 }
+             }
     }
+    
+    echo "has been successfully deleted !!";
+  }
 ?>

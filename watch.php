@@ -9,10 +9,11 @@
  * @license    http://www.vidyamantra.com
  */
 
+
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once(dirname(__FILE__).'/lib.php');
 require_once ($CFG->dirroot.'/course/moodleform_mod.php');
-global $DB,$USER;
+global $DB,$USER,$PAGE;
 //require_once(dirname(__FILE__).'/lib.php');
 
 $cmid = optional_param('cmid', 0, PARAM_INT);
@@ -26,8 +27,12 @@ if ($cmid) {
 
 $context = context_module::instance($cm->id);
 
+           $completion = new completion_info($course);
+            if($completion->is_enabled($cm) && $feedcam->completionwatch) {
+                 $completion->update_state($cm,COMPLETION_COMPLETE);
+             }
 //echo '<script src="http://localhost/moodle27d/mod/feedcam/js/need.js"></script>';
-$PAGE->requires->js('/mod/feedcam/js/need.js');
+
 echo '<body>';
 echo '<fieldset><legend><font color="black"  size="4"><b style="font-family:  "Hoefler Text", Georgia, "Times New Roman", serif;">RECORDINGS </b></font> </legend>';
 
@@ -110,8 +115,10 @@ $id2='';$url2='';$feedcamid='';
               
             //  echo '<script type="text/javascript" charset="utf-8" src="/mod/feedcam/js/need.js"></script>';
            // $PAGE->requires->js('/mod/feedcam/js/need.js'); 
-//            $PAGE->requires->js('/mod/feedcam/js/need.js');		
-
+             
+               echo '<script src="http://localhost/moodle27d/mod/feedcam/js/need.js"> </script>';
+            	
+           
                 
              echo '<div id="video-container">';
                       //  <!-- Video -->

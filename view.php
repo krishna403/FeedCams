@@ -81,6 +81,7 @@ $PAGE->set_context($context);
 $completion = new completion_info($course);
 $completion->set_module_viewed($cm);
 
+
 // Output starts here                         
 echo $OUTPUT->header();
 
@@ -107,10 +108,6 @@ $PAGE->requires->js('/mod/feedcam/js/record.js');
 
 $_SESSION['flip']=0;
 
-
-if(isset($_POST['submit'])){
-    $_SESSION['flip']=1;
-}
 if(isset($_POST['database'])){
     $_SESSION['flip']=1;
 }
@@ -118,11 +115,11 @@ if(isset($_POST['delete'])){
     $_SESSION['flip']=1;
 }
 if(isset($_POST['back'])){
-    $_SESSION['flip']=1;
+    $_SESSION['flip']=0;
 }
 
 
-
+/*
 if(((!isset($_POST['database'])) && (!isset($_POST['delete'])) && !isset($_POST['submit']) && !isset($_POST['back'])) && $_SESSION['flip']==0){
     
     
@@ -151,52 +148,61 @@ if(((!isset($_POST['database'])) && (!isset($_POST['delete'])) && !isset($_POST[
             echo '</fieldset></div>';
   }
 
+*/
 
 
 
 
 
-
-if(((!isset($_POST['database'])) && (!isset($_POST['delete'])) && (isset($_POST['back'])) || (isset($_POST['submit']))) && $_SESSION['flip']==1){
+if(((!isset($_POST['database'])) && (!isset($_POST['delete'])) && ((isset($_POST['back'])) || isset($id))) && $_SESSION['flip']==0){
         
    echo '<body>';
        echo '<article>';
             echo '<section class="experiment">'  ;
-            
-             echo  "<fieldset><legend><font color='black'  size='3'><b>HOME </b> </legend>";
-			
-				echo '<p style="text-align:center;">';
-				echo '<video id="preview" controls style="border: 1px solid rgb(15, 158, 238); height: 360px; width: 520px;"></video> <br/>';
-                                   
-                                 if (has_capability('mod/feedcam:godatabase', $context)) {
-                                   echo  '<form method=post action="" ><input type="submit" value="Recording Database" name="database" /></form>';
-                                 }
-				echo'</p>';
-				echo '<hr />';
-
+             
+                         echo  "<fieldset><legend><font color='black'  size='4'><b>FEED CAM </b> </legend>";
+                          
+                              echo '<div class="page">';
+                                            
+                                               echo '<div style="border-bottom:2px solid #0070a8;height:110px;width:900px;"><br><font ><p style="text-align:justify;font-size:12px;color: #333333;font-family: Century Gothic, sans-serif;">FeedCam is newly generated plugin for moodle. This provides the real interface for recording and uploading audio-video lectures'
+                                             . '. FeedCam is based on webRTC technology therefore, its truly efficient. Here we provide many options and privileges for different type of users. You can delete your recently '
+                                                       . 'recorded lecture as well as multiple deletion feature for previously recorded lectures. This is one of the poweful plugin that can automatically upload the lectures on server side therefore local space does not required much. </p></div>';
+                                               
+                                           
+                             echo '</div></br>';
+                           
+                                      echo "<form method=post name='home' action=''>";
+                            
+                            echo '<script src="http://localhost/moodle27d/mod/feedcam/js/need.js"> </script>';
+                     //  $PAGE->requires->js('/mod/feedcam/js/need.js');
+                      echo '<table><tr><td>';
+                      echo '<div id="video-container" style="text-align:center;margin:auto; border-right:1px solid #0070a8;height:500px;width:870px;"><p style="font-size:14px;color: #333333;font-family: Century Gothic, sans-serif;"><b>Click on | ';
 			  
-			// echo $OUTPUT->single_button(new moodle_url('#', array('id' => 'record')), 'Record &RightTriangleBar');
-			
-			//$form = new html_form();
-				//$form->url = new moodle_url('http://domain.com/index.php', array('id' => 3, 'userid' => 5));
-				//$form->button->text = 'My account';
-				//echo $OUTPUT->button($form);
-				
-				
-					
-			     if (has_capability('mod/feedcam:record', $context)) {
-                                echo '<button id="record" style="height: 40px; width: 180px;">Record &RightTriangleBar;</button>';
-                             }
-                             
-                              echo '<button id="stop" style="height: 40px; width: 180px;" disabled>Stop &FilledSmallSquare;</button>';
+                         if (has_capability('mod/feedcam:record', $context)) {
+                           echo '<input type=submit id="record" name="record" value="Record &RightTriangleBar;" style="height: 32px; width: 130px; color:#36AE79;"> | ';
+                          }
+                          
+                          echo ' for live Camera</b></p>';  
+		          echo '<video id="preview" controls style=" border:1px solid #0070a8;height: 430px; width: 580px;"></video></p>';
+                        
+                        
+                          echo '<hr />';
+                          echo '<button id="stop" style="height: 35px; width: 150px; color:red;" disabled>Stop &FilledSmallSquare;</button> | ';
                                  
-                            if (has_capability('mod/feedcam:deleterecent', $context)) {
-                         	     echo '<button id="delete" style="height: 40px; width: 180px;" disabled>Delete files</button>';
+                          if (has_capability('mod/feedcam:deleterecent', $context)) {
+                 	     echo '<button id="delete" style="height: 35px; width: 150px;" disabled>Delete files</button> || ';
+                          }
+                          if (has_capability('mod/feedcam:godatabase', $context)) {
+                              echo  '<form method=post action="" ><input type="submit" value="Feedcam'."'s".' Store" name="database" style="height: 35px; width: 180px; font-size:13px;color:#00BFFF;" /><img src="http://www.essentialsql.com/wp-content/uploads/2014/05/database-parts.jpg" height="42" width="60"></img></form>';
                            }
-
-				 echo '<div id="container" style="padding:1em 2em;"></div>';
-                echo '</fieldset>';               
-             echo '</section>';
+                           
+                      echo '</div></td></tr>';
+                      
+                     echo '<tr><td><div align=center>';
+                    // echo '<tr><td><input type="text" id="textbox" onload="loadvalue()"/></td></tr>';
+                     echo '<tr><td><div id="container" style="padding:1em 1em;margin-top:80px; width: 500px; height: 200px;""></div></div></td></tr></table>';
+                    echo '</form></fieldset>';               
+               echo '</section>';
             
              //$id = optional_param('id', 0, PARAM_INT); // course_module ID
              
@@ -206,7 +212,10 @@ if(((!isset($_POST['database'])) && (!isset($_POST['delete'])) && (isset($_POST[
          echo '<script>window.uniqueId ='.$id.' </script>';
 	$PAGE->requires->js('/mod/feedcam/js/record2.js');		
            
-			
+            if($completion->is_enabled($cm) && $feedcam->completionrecord) {
+                 $completion->update_state($cm,COMPLETION_COMPLETE);
+             }
+        
        echo '</article>';
    echo '</body>';
    
@@ -214,7 +223,7 @@ if(((!isset($_POST['database'])) && (!isset($_POST['delete'])) && (isset($_POST[
 
 
 
-if(((isset($_POST['database'])) || (isset($_POST['delete']))  || !isset($_POST['back']) && !isset($_POST['submit'])) && ($_SESSION['flip']==1)){
+if(((isset($_POST['database'])) || (isset($_POST['delete']))  || !isset($_POST['back'])) && ($_SESSION['flip']==1)){
  
     
      echo '<body>';
