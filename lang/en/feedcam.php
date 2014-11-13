@@ -50,6 +50,28 @@ $string['completionrecord'] = 'Student must record the video lacture:';
 $string['completionwatch'] = 'Student must watch the video lactures:';
 $string['eventvideocreated'] = 'Recorded video has been submitted';
 $string['eventvideorevealed'] = 'Recorded video has been watched';
+$string['record'] = "Record ";
+$string['stop'] = "Stop ";
+$string['deletefiles'] = "Delete Files";
+$string['store'] = "Feedcam's Store";
+$string['backbutton'] = "<=  Back to Home";
+$string['deleteselected'] = "Delete Selected";
+$string['firstpara']= "<b>FeedCam</b> is newly generated plugin for moodle. This provides the real interface for recording and uploading audio-video lectures'
+                                                   FeedCam is based on webRTC technology therefore, its truly efficient. Here we provide many options and privileges for different type of users. You can delete your recently 
+                                                  recorded lecture as well as multiple deletion feature for previously recorded lectures. This is one of the poweful plugin that can automatically upload the lectures on server side therefore local space does not required much.";
+$string['clickon'] = "Click on | ";
+$string['livecamera'] = " for live Camera";
+$string['feedcamlegend'] = "FEED CAM";
+$string['curruptprint'] = "Sorry, Currupted media and did not store on server";
+$string['deleteprint']= " Successfully Deleted ";
+$string['existprint']= " No Video File Exist";
+$string['deletemultiple'] = "Delete A/V Files";
+$string['storeheader'] = " RECORDINGS ";
+
+
+
+
+
 //$string['completionwatchhelp'] = 'requiring recordings and feedbacks to complete';
 
 

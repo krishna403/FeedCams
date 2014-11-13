@@ -14,7 +14,7 @@ class backup_feedcam_activity_task extends backup_activity_task {
      */
     protected function define_my_settings() {
         // No particular settings for this activity
-        $this->add_step(new backup_feedcam_activity_structure_step('feedcam_structure', 'feedcam.xml'));
+      //  $this->add_step(new backup_feedcam_activity_structure_step('feedcam_structure', 'feedcam.xml'));
     }
  
     /**
@@ -22,6 +22,7 @@ class backup_feedcam_activity_task extends backup_activity_task {
      */
     protected function define_my_steps() {
         // Feedcam only has one structure step
+       $this->add_step(new backup_feedcam_activity_structure_step('feedcam_structure', 'feedcam.xml'));
     }
  
     /**

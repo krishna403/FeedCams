@@ -33,6 +33,8 @@ require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once(dirname(__FILE__).'/lib.php');
 require_once(dirname(__FILE__).'/locallib.php');
 require_once ($CFG->dirroot.'/course/moodleform_mod.php');
+//require_once ($CFG->dirroot.'/mod/feedcam/style.css');
+$PAGE->requires->css('/mod/feedcam/style.css');
 
 $id = optional_param('id', 0, PARAM_INT); // course_module ID, or
 $n  = optional_param('n', 0, PARAM_INT);  // feedcam instance ID - it should be named as the first character of the module
@@ -81,7 +83,7 @@ $PAGE->set_context($context);
 $completion = new completion_info($course);
 $completion->set_module_viewed($cm);
 
-
+$heading = $OUTPUT->heading(format_string($feedcam->name), 2, null);
 // Output starts here                         
 echo $OUTPUT->header();
 
@@ -108,13 +110,17 @@ $PAGE->requires->js('/mod/feedcam/js/record.js');
 
 $_SESSION['flip']=0;
 
-if(isset($_POST['database'])){
+$postdatabase= optional_param('database', null, PARAM_RAW);
+$postdelete= optional_param('delete', null, PARAM_RAW);
+$postback= optional_param('back', null, PARAM_RAW);
+
+if(isset($postdatabase)){
     $_SESSION['flip']=1;
 }
-if(isset($_POST['delete'])){
+if(isset($postdelete)){
     $_SESSION['flip']=1;
 }
-if(isset($_POST['back'])){
+if(isset($postback)){
     $_SESSION['flip']=0;
 }
 
@@ -154,55 +160,99 @@ if(((!isset($_POST['database'])) && (!isset($_POST['delete'])) && !isset($_POST[
 
 
 
-if(((!isset($_POST['database'])) && (!isset($_POST['delete'])) && ((isset($_POST['back'])) || isset($id))) && $_SESSION['flip']==0){
-        
-   echo '<body>';
-       echo '<article>';
-            echo '<section class="experiment">'  ;
+if(((!isset($postdatabse)) && (!isset($postdelete)) && ((isset($_POST['back'])) || isset($id))) && $_SESSION['flip']==0){
+      
+   
+     //  echo '<section class="experiment">'  ;
              
-                         echo  "<fieldset><legend><font color='black'  size='4'><b>FEED CAM </b> </legend>";
+           //html_writer::start_tag('fieldset',  array('class' => 'field'));
+           //  html_writer::tag('legend', get_string('feedcamlegend', 'feedcam'), array('id' => 'feedcamlegend','class' => 'field'));
+                       echo "<fieldset><legend><font size='3'>$heading</legend>";
                           
-                              echo '<div class="page">';
+                            //  echo '<div class="page">';
+                                      echo html_writer::start_tag('div', array('class' => 'page'));
                                             
-                                               echo '<div style="border-bottom:2px solid #0070a8;height:110px;width:900px;"><br><font ><p style="text-align:justify;font-size:12px;color: #333333;font-family: Century Gothic, sans-serif;">FeedCam is newly generated plugin for moodle. This provides the real interface for recording and uploading audio-video lectures'
-                                             . '. FeedCam is based on webRTC technology therefore, its truly efficient. Here we provide many options and privileges for different type of users. You can delete your recently '
-                                                       . 'recorded lecture as well as multiple deletion feature for previously recorded lectures. This is one of the poweful plugin that can automatically upload the lectures on server side therefore local space does not required much. </p></div>';
+                                                echo html_writer::start_tag('div', array('id'=>'firstdiv','class' => 'page')).'<br/>';
+                                                   echo html_writer::tag('p', get_string('firstpara', 'feedcam'), array('id'=>'firstpara','class' => 'page'));
+                                               echo html_writer::end_tag('div');
                                                
-                                           
-                             echo '</div></br>';
-                           
-                                      echo "<form method=post name='home' action=''>";
+                               
+                                      echo html_writer::end_tag('div');
+                            // echo '</div></br>';
+                           $PAGE->requires->js('/mod/feedcam/js/need.js');
+                        //   echo '<br/>';
+                                   
+                           html_writer::start_tag('form', array('method' => 'post', 'action' => ''));
+                        //   echo "<form method=post name='home' action=''>";
                             
-                            echo '<script src="http://localhost/moodle27d/mod/feedcam/js/need.js"> </script>';
+                          //  echo '<script src="http://localhost/moodle27d/mod/feedcam/js/need.js"> </script>';
                      //  $PAGE->requires->js('/mod/feedcam/js/need.js');
-                      echo '<table><tr><td>';
-                      echo '<div id="video-container" style="text-align:center;margin:auto; border-right:1px solid #0070a8;height:500px;width:870px;"><p style="font-size:14px;color: #333333;font-family: Century Gothic, sans-serif;"><b>Click on | ';
+                    
+                            
+                            
+                       
+                     //  echo '<tr><td>';
+                           echo html_writer::start_tag('div', array('id' => 'video-container'));
+                          // echo 'Click on | ';
+                           echo get_string('clickon', 'feedcam');
+                       // echo '<div id="video-container" style="text-align:center;margin:auto; border-right:1px solid #0070a8;height:500px;width:870px;">Click on | ';
 			  
                          if (has_capability('mod/feedcam:record', $context)) {
-                           echo '<input type=submit id="record" name="record" value="Record &RightTriangleBar;" style="height: 32px; width: 130px; color:#36AE79;"> | ';
+                             
+                            echo html_writer::empty_tag('input', array('type' => 'submit','name'=>'record', 'value' => get_string('record','feedcam'),'id'=>'record', 'class'=>'recordbutton' ));
+                                     
+                           
+           
+                         //  echo '<input type=submit id="record" name="record" value="Record &RightTriangleBar;" style="height: 32px; width: 130px; color:#36AE79;"> | ';
                           }
                           
-                          echo ' for live Camera</b></p>';  
-		          echo '<video id="preview" controls style=" border:1px solid #0070a8;height: 430px; width: 580px;"></video></p>';
+                          echo get_string('livecamera', 'feedcam');
+                         // echo ' for live Camera';  
+                          
+                          echo html_writer::start_tag('video', array('id' => 'preview','class'=>'videopreview','controls'=> 'controls'));echo html_writer::end_tag('video');
+		        //  echo '<video id="preview" controls style=" border:1px solid #0070a8;height: 430px; width: 580px;"></video></p>';
                         
                         
-                          echo '<hr />';
-                          echo '<button id="stop" style="height: 35px; width: 150px; color:red;" disabled>Stop &FilledSmallSquare;</button> | ';
-                                 
-                          if (has_capability('mod/feedcam:deleterecent', $context)) {
-                 	     echo '<button id="delete" style="height: 35px; width: 150px;" disabled>Delete files</button> || ';
-                          }
-                          if (has_capability('mod/feedcam:godatabase', $context)) {
-                              echo  '<form method=post action="" ><input type="submit" value="Feedcam'."'s".' Store" name="database" style="height: 35px; width: 180px; font-size:13px;color:#00BFFF;" /><img src="http://www.essentialsql.com/wp-content/uploads/2014/05/database-parts.jpg" height="42" width="60"></img></form>';
-                           }
-                           
-                      echo '</div></td></tr>';
+                        echo '<hr />';
+                          //  echo '<button id="stop" style="height: 35px; width: 150px; color:red;" disabled>Stop &FilledSmallSquare;</button> | ';
+
+                    //    echo html_writer::start_tag('div', array('id' => 'buttons'));
+                        
+                        
+                        echo '<table align=center><tr><td>';
+                            echo html_writer::empty_tag('input', array('type' => 'button','name'=>'stop', 'value' => get_string('stop','feedcam'),'id'=>'stop', 'class'=>'stopbutton','disabled'=>'disabled' )).' |</td><td>';
+                            if (has_capability('mod/feedcam:deleterecent', $context)) {
+                             //  echo '<button id="delete" style="height: 35px; width: 150px;" disabled>Delete files</button> || ';
+                               echo html_writer::empty_tag('input', array('type' => 'button','name'=>'delete', 'value' => get_string('deletefiles','feedcam'),'id'=>'delete', 'class'=>'deletefilesbutton','disabled'=>'disabled' )).' ||';
+                            }
+                            echo '</td><td>';
+                            if (has_capability('mod/feedcam:godatabase', $context)) {
+                                //   echo  '<form method=post action="" ><input type="submit" value="Feedcam'."'s".' Store" name="database" style="height: 35px; width: 180px; font-size:13px;color:#00BFFF;" /><img src="http://www.essentialsql.com/wp-content/uploads/2014/05/database-parts.jpg" height="42" width="60"></img></form>';
+                             $url = new moodle_url('');
+                               echo html_writer::tag('form',html_writer::empty_tag('input', array('type' => 'submit','name'=>'database', 'value' => get_string('store','feedcam'),'id'=>'store', 'class'=>'databasesbutton')), array('method' => 'post', 'action' => '')).'</td><td>';
+                               echo  html_writer::link($url, '<img src = "http://www.essentialsql.com/wp-content/uploads/2014/05/database-parts.jpg" class = "databaseimage" id="databaseimage" />');
+
+                            }
+                           echo '</td><tr></table>' ;
+                      // echo html_writer::end_tag('div');
+                           echo html_writer::end_tag('div'); echo html_writer::end_tag('form');
+                        
+                     // echo '</div>';
+                   //   echo '</td></tr>';
                       
-                     echo '<tr><td><div align=center>';
                     // echo '<tr><td><input type="text" id="textbox" onload="loadvalue()"/></td></tr>';
-                     echo '<tr><td><div id="container" style="padding:1em 1em;margin-top:80px; width: 500px; height: 200px;""></div></div></td></tr></table>';
-                    echo '</form></fieldset>';               
-               echo '</section>';
+                   //  echo '<tr><td>';
+                           echo html_writer::start_tag('div', array('id' => 'container','class'=>'uploadingbar'));
+                           echo html_writer::end_tag('div');
+                   // echo '<div align="center" id="container" style="padding:1em 1em;margin-top:80px; width: 600px; height: 200px;""></div>';
+                   //  echo '</td></tr>';
+                    // echo html_writer::end_tag('div');
+                 
+                   //   echo '</form>';
+                 //     echo '</table>';
+                  echo '</fieldset>'; 
+                    //       echo html_writer::end_tag('fieldset');
+           // echo '</section>';
             
              //$id = optional_param('id', 0, PARAM_INT); // course_module ID
              
@@ -216,25 +266,22 @@ if(((!isset($_POST['database'])) && (!isset($_POST['delete'])) && ((isset($_POST
                  $completion->update_state($cm,COMPLETION_COMPLETE);
              }
         
-       echo '</article>';
-   echo '</body>';
    
     }
 
 
 
-if(((isset($_POST['database'])) || (isset($_POST['delete']))  || !isset($_POST['back'])) && ($_SESSION['flip']==1)){
+if(((isset($postdatabse)) || (isset($postdelete))  || !isset($postback)) && ($_SESSION['flip']==1)){
  
     
-     echo '<body>';
-      echo '<fieldset><legend><font color="black"  size="4"><b style="font-family:  "Hoefler Text", Georgia, "Times New Roman", serif;">RECORDINGS </b></font> </legend>';
-
+    //  echo '<fieldset><legend><font color="black"  size="4"><b style="font-family:  "Hoefler Text", Georgia, "Times New Roman", serif;">RECORDINGS </b></font> </legend>';
+               echo html_writer::tag('h3', get_string('storeheader', 'feedcam'));
   
 
        
          //    global $DB;
 
-          if(isset($_POST['delete']))  {   
+          if(isset($postdelete))  {   
                 $names=$_POST['videoarr'];
                   foreach($names as $value){
                       
@@ -245,13 +292,22 @@ if(((isset($_POST['database'])) || (isset($_POST['delete']))  || !isset($_POST['
                                $itemid=$idarr[0];
                                $itemname=$idarr[1];
                                
-                          echo "<div  style='float:right;'><font color='#A80707'><b>".$itemid." |  </font></b></div>";
+                              echo html_writer::start_tag('div', array('class'=>'itemidprint'));
+                                  echo $itemid.' |';
+                              echo html_writer::end_tag('div');  
+                               
+                        // echo "<div  style='float:right;'><font color='#A80707'><b>".$itemid." |  </font></b></div>";
                                
                                
                             if(!($DB->record_exists('files', array('contextid' =>$context->id, 'itemid'=>$itemid)))){  
 
                                  $DB->delete_records('videos', array ('id'=> $itemid));
-                                 echo "<div><font color='#A80707'>Sorry, Currupted media and did not store on server<font></div>";
+                                 
+                                 echo html_writer::start_tag('div', array('class'=>'curruptprint'));
+                                   echo get_string('curruptprint', 'feedcam');
+                                  echo html_writer::end_tag('div');  
+                                  
+                              //   echo "<div><font color='#A80707'>Sorry, Currupted media and did not store on server<font></div>";
                                  // mysqli_query($conn,"DELETE FROM mdl_videos WHERE name='$withvideoext' OR name='$withaudioext' ");
 
                                  //  $DB->delete_records("videos", array("name"=>$value));
@@ -280,7 +336,10 @@ if(((isset($_POST['database'])) || (isset($_POST['delete']))  || !isset($_POST['
                        }
                           
                   }
-                  echo "<div><font color='#A80707'> Successfully Deleted </font></div>"; 
+                   echo html_writer::start_tag('div', array('class'=>'curruptprint'));
+                       echo get_string('deleteprint', 'feedcam');
+                   echo html_writer::end_tag('div');  
+                //  echo "<div><font color='#A80707'> Successfully Deleted </font></div>"; 
              
            }
  
@@ -296,28 +355,48 @@ if(((isset($_POST['database'])) || (isset($_POST['delete']))  || !isset($_POST['
     //db
         if(!$query){
             
-                echo "<form method='post' action='view.php?id={$cm->id}'><input type=submit name='back' value='Back to Video Capture' name='home' /></form>";
-                echo "<div  style='float:right;'><font color='#A80707'><b>No Video File Exist</font></b></div>";
+            echo html_writer::tag('form',html_writer::empty_tag('input', array('type' => 'submit','name'=>'back', 'value' => get_string('backbutton','feedcam'),'id'=>'backbutton')), array('method' => 'post', 'action' => "view.php?id={$cm->id}"));
+            
+               // echo "<form method='post' action='view.php?id={$cm->id}'><input type=submit name='back' value='Back to Video Capture' name='home' /></form>";
+                echo html_writer::start_tag('div', array('class'=>'itemidprint'));
+                         echo get_string('existprint', 'feedcam');
+                  echo html_writer::end_tag('div');
+            
+          //  echo "<div style='float:right;'><font color='#A80707'><b>No Video File Exist</font></b></div>";
           }
             
-        else {  
+        else { 
             
-            echo "<table align='center'><tr><td><div align=center style><form method='post' action='view.php?id={$cm->id}'><input type=submit name='back' value='Back to Video Capture' name='home' style='height: 40px; width: 180px;' /></form></td>";
+            
+            
+            echo "<table align='center'><tr><td><div align=center style>";
+            echo html_writer::tag('form',html_writer::empty_tag('input', array('type' => 'submit','name'=>'back', 'value' => get_string('backbutton','feedcam'),'id'=>'backbutton')), array('method' => 'post', 'action' => "view.php?id={$cm->id}")).'<td>';
+       
           //  echo "<div align=center><a href='view.php?id={$cm->id}'><input type=button value='Back to Video Capture' name='home' style='height: 40px; width: 180px;' /></a> | ";
           
             // echo '';
             
             if (has_capability('mod/feedcam:deletemultiple', $context)) {
-               echo '<td><form action="" method=post><input type="submit" value="Delete Videos" name="delete" title="Delete" style="height: 40px; width: 180px;" /></div></td>';
+               echo '<td>';
+           //   echo html_writer::tag('form',
+            //          html_writer::empty_tag('input', array('type' => 'submit','name'=>'delete', 'value' => get_string('deleteselected','feedcam'),'id'=>'deleteselected')),
+            //          array('method' => 'post', 'action' => ""));
+              
+               
+               echo html_writer::start_tag('form', array('method' => 'post', 'action' => ''));
+               echo html_writer::empty_tag('input', array('type' => 'submit','name'=>'delete', 'value' => get_string('deletemultiple','feedcam'),'id'=>'deletemul', 'class'=>'deletemulbutton' ));
+              
+             //  echo '<form action="" method=post><input type="submit" value="Delete Videos" name="delete" title="Delete" style="height: 40px; width: 180px;" />';
+               echo '</div></td>';
             }
             
             echo '</tr></table><br/>';
-            echo "<div style='overflow: scroll; width: 500px; height: 600px;margin-left:35%;'><table cellpadding=30 cellspacing=2 bordercolor=green border=1>";
+            
+            echo html_writer::start_tag('div', array('id'=>'storetable'));
+            echo "<table cellpadding=30 cellspacing=2 bordercolor=green border=1>";
             echo "<tr><th>Id</th><th>Name</th><th>Delete</th></tr>";
             
            // while($row=$DB->get_records_list($query)){   //db
-        
-        
         foreach ($query as $value) { 
                 $vid= $value->id;
                 $feedcamid= $value->feedcam_id;
@@ -341,23 +420,23 @@ if(((isset($_POST['database'])) || (isset($_POST['delete']))  || !isset($_POST['
                     
                // echo "<tr><td>$id</td><td><a href=\"javascript:create_window('watch.php?id=$id','500','800')\>$name</a><br /></td><td><input type=checkbox name=name[] value='$name' /></td></tr>";     
                // echo "<tr><td>$id</td><td><a href='watch.php?id=$id'>$name</a><br /></td><td><input type=checkbox name=name[] value='$name' /></td></tr>";
-                echo "<tr><td>$vid</td><td><a  href=\"javascript:create_window('watch.php?id=$vid&cmid=$id')\">$name</a><br /></td><td><input type=checkbox name=videoarr[] value='$videoids' /></td></tr>";
+                echo "<tr><td>$vid</td><td>";
+                
+              //  $link = new action_link();
+              //      $link->url = new moodle_url("javascript:create_window('watch.php?id=$vid&cmid=$id')", array('id' => 2, 'action' => 'browse')); // required, but you can use a string instead
+              //      $link->text = "$name"; // Required
+              //      echo $OUTPUT->link($link);
+                            
+                echo "<a  href=\"javascript:create_window('watch.php?id=$vid&cmid=$id')\">$name</a>";
+                echo "<br /></td><td><input type=checkbox name=videoarr[] value='$videoids' /></td></tr>";
             }
             
-            echo "</table></div>";
-     
-             echo '</form>';
+             echo "</table>";
+            echo html_writer::end_tag('div'); 
+          echo html_writer::end_tag('form');  
             
         }
-      
-     
-      echo '</fieldset>';
-   echo  '</body>';
-   
-
-    
-    
-    
+   // echo '</fieldset>';
 }
 
 

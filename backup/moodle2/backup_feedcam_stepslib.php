@@ -15,14 +15,14 @@ class backup_feedcam_activity_structure_step extends backup_activity_structure_s
             'course', 'name', 'intro',
             'introformat', 'timecreated', 'timemodified', 'completionrecord', 'completionwatch'));
  
-        $videos = new backup_nested_element('videos');
+    //    $videos = new backup_nested_element('video');
 
         $video = new backup_nested_element('videos', array('id'), array(
                                                 'user_id',
                                                 'name',
                                                 'url'));
 
-        $watchings = new backup_nested_element('watching');
+    //    $watchings = new backup_nested_element('watching');
 
         $watching = new backup_nested_element('watching', array('id'), array(
                                                 'user_id',
@@ -30,11 +30,11 @@ class backup_feedcam_activity_structure_step extends backup_activity_structure_s
 
  
         // Build the tree
-        $feedcam->add_child($videos);
-        $videos->add_child($video);
+        $feedcam->add_child($video);
+       // $videos->add_child($video);
  
-        $feedcam->add_child($watchings);
-        $watchings->add_child($watching);
+        $feedcam->add_child($watching);
+       // $watchings->add_child($watching);
  
       
         
@@ -47,14 +47,15 @@ class backup_feedcam_activity_structure_step extends backup_activity_structure_s
                  WHERE feedcam_id = ?',
                 array(backup::VAR_PARENTID));
         
-        //  if ($userinfo) {
-       //       $watching->set_source_table('feedcam_watching', array('feedcam_id' => backup::VAR_PARENTID));
-       //  }
+         if ($userinfo) {
+              $watching->set_source_table('feedcam_watching', array('feedcam_id' => backup::VAR_PARENTID));
+        }
  
         // Define id annotations
       //   $watching->annotate_ids('user', 'user_id');
  
         // Define file annotations
+          $watching->annotate_ids('user', 'user_id');
          $feedcam->annotate_files('mod_feedcam', 'intro', null); // This file area does not have an itemid
  
         // Return the root element (feedcam), wrapped into standard activity structure
